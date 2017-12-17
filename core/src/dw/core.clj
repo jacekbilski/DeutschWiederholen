@@ -1,6 +1,4 @@
 (ns dw.core)
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn verify-noun [noun answer]
+  (= (:gender noun) answer))

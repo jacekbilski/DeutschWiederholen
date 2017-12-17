@@ -1,4 +1,16 @@
 (use 'clojure.test)
+(use 'dw.core)
 
-(Given #"a noun (\w+) with a gender (\w+)" [noun gender]
-       (println (str "Noun: " noun ", gender: " gender)))
+(def noun (atom []))
+
+(def result (atom []))
+
+(Given #"a noun ([^ ]+) with a gender (\w+)" [n gender]
+       (reset! noun {:noun noun :gender gender}))
+
+(When #"the user chooses gender (.)" [gender]
+      (reset! result (verify-noun @noun gender)))
+
+(Then #"the answer was correct: (\w+)" [correct-str]
+      (let [correct (= "true" correct-str)]
+        (assert (= @result correct))))
