@@ -5,13 +5,20 @@ Description: >
 
 Parameters:
   GitHubUsername:
+    Default: jacekbilski
     Description: A GitHub username
     Type: String
   GitHubRepository:
+    Default: DeutschWiederholen
     Description: A GitHub repository
     Type: String
   RepositoryBranch:
+    Default: master
     Description: A branch name in a repository
+    Type: String
+  GitHubOAuthToken:
+    NoEcho: true
+    Description: A GitHub OAuth token
     Type: String
   PipelineName:
     Default: deutsch-wiederholen
@@ -27,22 +34,27 @@ Parameters:
     Type: String
   ChangeSetName:
     Default: deutsch-wiederholen-change-set
-    Description: A name for the production WordPress stack change set
+    Description: A name for the stack change set
+    Type: String
+  Email:
+    Default: jacek.bilski@innoq.com
+    Description: The email address where CodePipeline sends pipeline notifications
     Type: String
 
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
+          default: "CodePipeline Settings"
+        Parameters:
+          - PipelineName
+          - Email
+      - Label:
           default: "GitHub Settings"
         Parameters:
           - GitHubUsername
           - GitHubRepository
           - RepositoryBranch
-      - Label:
-          default: "CodePipeline Settings"
-        Parameters:
-          - PipelineName
       - Label:
           default: "Stack Settings"
         Parameters:
@@ -68,7 +80,8 @@ Resources:
             Version: '2012-10-17'
             Statement:
               - Action:
-                  - 'ec2:*'
+                  - 'iam:*'
+                  - 'cloudformation:*'
                 Effect: Allow
                 Resource: '*'
 
@@ -110,6 +123,13 @@ Resources:
       VersioningConfiguration:
         Status: Enabled
 
+  CodePipelineSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref Email
+          Protocol: email
+
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -133,8 +153,9 @@ Resources:
                 Repo: !Ref 'GitHubRepository'
                 Branch: !Ref 'RepositoryBranch'
                 PollForSourceChanges: true
+                OAuthToken: !Ref GitHubOAuthToken
               OutputArtifacts:
-                - Name: TemplateSource
+                - Name: Template
               RunOrder: '1'
         - Name: Deploy
           Actions:
@@ -145,14 +166,14 @@ Resources:
                 Provider: CloudFormation
                 Version: '1'
               InputArtifacts:
-                - Name: TemplateSource
+                - Name: Template
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 RoleArn: !GetAtt [CFNRole, Arn]
+                Capabilities: CAPABILITY_NAMED_IAM
                 StackName: !Ref StackName
                 ChangeSetName: !Ref ChangeSetName
-                TemplateConfiguration: !Sub "TemplateSource::${ProdStackConfig}"
-                TemplatePath: !Sub "TemplateSource::${TemplateFileName}"
+                TemplatePath: !Sub "Template::${TemplateFileName}"
               RunOrder: '1'
             - Name: ApproveChangeSet
               ActionTypeId:
@@ -162,7 +183,7 @@ Resources:
                 Version: '1'
               Configuration:
                 NotificationArn: !Ref CodePipelineSNSTopic
-                CustomData: !Sub 'A new change set was created for the ${ProdStackName} stack. Do you want to implement the changes?'
+                CustomData: !Sub 'A new change set was created for the ${StackName} stack. Do you want to implement the changes?'
               RunOrder: '2'
             - Name: ExecuteChangeSet
               ActionTypeId:
@@ -174,5 +195,5 @@ Resources:
                 ActionMode: CHANGE_SET_EXECUTE
                 ChangeSetName: !Ref ChangeSetName
                 RoleArn: !GetAtt [CFNRole, Arn]
-                StackName: !Ref ProdStackName
+                StackName: !Ref StackName
               RunOrder: '3'
