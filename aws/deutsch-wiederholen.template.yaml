@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
   lambdaExecution:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -10,13 +10,12 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
+            Action: ['sts:AssumeRole']
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
 
   restApi:
-    Type: "AWS::ApiGateway::RestApi"
+    Type: AWS::ApiGateway::RestApi
     Properties:
       Description: 'Returns dictionaries'
       EndpointConfiguration:
@@ -24,11 +23,8 @@ Resources:
           - Edge
 
   restApiRootResource:
-    Type: "AWS::ApiGateway::Resource"
+    Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId:
-        Fn::GetAtt:
-          - !Ref restApi
-          - 'RootResourceId'
+      ParentId: !GetAtt restApi.RootResourceId
       PathPart: '{name+}'
       RestApiId: !Ref restApi
