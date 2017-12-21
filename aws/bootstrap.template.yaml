@@ -82,6 +82,7 @@ Resources:
               - Action:
                   - 'iam:*'
                   - 'cloudformation:*'
+                  - 'apigateway:*'
                 Effect: Allow
                 Resource: '*'
 

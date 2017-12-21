@@ -16,11 +16,11 @@ Resources:
 
   restApi:
     Type: AWS::ApiGateway::RestApi
+    Name: 'Dictionaries'
     Properties:
       Description: 'Returns dictionaries'
       EndpointConfiguration:
-        Types:
-          - Edge
+        Types: ['EDGE']
 
   restApiRootResource:
     Type: AWS::ApiGateway::Resource
