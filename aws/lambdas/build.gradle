@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
+}
+
+group 'com.innoq.jacekb'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+ext {
+    awsLambdaVersion = '1.2.0'
+    awsLambdaEventsVersion = '2.0.2'
+//    awsSdkVersion = '1.11.251'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-core', version: "${awsLambdaVersion}"
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-events', version: "${awsLambdaEventsVersion}"
+}
+
+build.dependsOn shadowJar
