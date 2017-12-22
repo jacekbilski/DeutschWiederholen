@@ -38,9 +38,24 @@ Resources:
       EndpointConfiguration:
         Types: ['EDGE']
 
-  restApiRootResource:
+  restApiNameResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt restApi.RootResourceId
       PathPart: '{name+}'
+      RestApiId: !Ref restApi
+
+  restApiGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        ContentHandling: CONVERT_TO_TEXT
+        IntegrationHttpMethod: POST
+        PassthroughBehavior: WHEN_NO_MATCH
+        Type: AWS_PROXY
+      RequestParameters:
+        method.request.path.name: true
+      ResourceId: !Ref restApiNameResource
       RestApiId: !Ref restApi
