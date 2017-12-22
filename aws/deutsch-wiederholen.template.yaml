@@ -18,12 +18,12 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: 'arn:aws:s3:::dw-bootstrap-artifactstorebucket-15ca1vm75gune'
+        S3Bucket: 'dw-bootstrap-artifactstorebucket-15ca1vm75gune'
         S3Key: 'deutsch-wiederholen/lambda/lambdas-1.0-SNAPSHOT-all.jar'
       Description: 'Lambda handling dictionaries queries'
       Handler: 'dw.Hello'
       MemorySize: 128
-      Role: !Ref lambdaExecutionRole
+      Role: !GetAtt lambdaExecutionRole.Arn
       Runtime: 'java8'
       Timeout: 10
       Tags:
