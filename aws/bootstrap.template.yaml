@@ -83,6 +83,7 @@ Resources:
                   - 'iam:*'
                   - 'cloudformation:*'
                   - 'lambda:*'
+                  - 's3:*'
                   - 'apigateway:*'
                 Effect: Allow
                 Resource: '*'
