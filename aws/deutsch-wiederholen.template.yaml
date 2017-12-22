@@ -55,6 +55,7 @@ Resources:
         IntegrationHttpMethod: POST
         PassthroughBehavior: WHEN_NO_MATCH
         Type: AWS_PROXY
+        Uri: !Sub arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/${dictionariesLambda}/invocations
       RequestParameters:
         method.request.path.name: true
       ResourceId: !Ref restApiNameResource
