@@ -156,7 +156,7 @@ Resources:
                 PollForSourceChanges: true
                 OAuthToken: !Ref GitHubOAuthToken
               OutputArtifacts:
-                - Name: Template
+                - Name: Source
               RunOrder: '1'
         - Name: Deploy
           Actions:
@@ -167,14 +167,14 @@ Resources:
                 Provider: CloudFormation
                 Version: '1'
               InputArtifacts:
-                - Name: Template
+                - Name: Source
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 RoleArn: !GetAtt [CFNRole, Arn]
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName: !Ref StackName
                 ChangeSetName: !Ref ChangeSetName
-                TemplatePath: !Sub "Template::${TemplateFileName}"
+                TemplatePath: !Sub "Source::${TemplateFileName}"
               RunOrder: '1'
             - Name: ApproveChangeSet
               ActionTypeId:

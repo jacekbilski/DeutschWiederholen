@@ -1,0 +1,12 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - ./gradlew clean :aws:lambdas:build
+
+artifacts:
+  files:
+    - aws/lambdas/build/libs/lambdas-1.0-SNAPSHOT-all.jar
+cache:
+  paths:
+    - '/root/.gradle/**/*'
