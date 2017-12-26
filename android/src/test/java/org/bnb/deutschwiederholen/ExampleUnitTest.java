@@ -5,6 +5,7 @@ import clojure.lang.IFn;
 import dw.nouns.Noun;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -28,7 +29,7 @@ public class ExampleUnitTest {
         IFn verify = Clojure.var("dw.core", "verify");
         try {
             Object result = verify.invoke(noun, "f");
-            assertEquals(true, result);
+            assertThat(result).isEqualTo(true);
         } catch (Exception e) {
             System.err.println("Something went wrong: " + e.getMessage());
             e.printStackTrace(System.err);
