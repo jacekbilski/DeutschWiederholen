@@ -1,4 +1,4 @@
 (ns dw.core)
 
-(defn verify-noun [noun answer]
-  (= (:gender noun) answer))
+(defprotocol Quiz
+  (verify [question answer]))
