@@ -8,3 +8,6 @@
   (verify [noun answer]
     (= (:gender noun) answer))
   )
+
+(defn next-question []
+  (->Noun "Umgebung" :feminine))

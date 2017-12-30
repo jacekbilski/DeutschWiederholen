@@ -7,10 +7,10 @@
 (def result (atom []))
 
 (Given #"a noun ([^ ]+) with a gender (\w+)" [n gender]
-       (reset! noun (->Noun n gender)))
+       (reset! noun (->Noun n (keyword gender))))
 
-(When #"the user chooses gender (.)" [gender]
-      (reset! result (verify @noun gender)))
+(When #"the user chooses gender (\w+)" [gender]
+      (reset! result (verify @noun (keyword gender))))
 
 (Then #"the answer was correct: (\w+)" [correct-str]
       (let [correct (= "true" correct-str)]

@@ -5,8 +5,8 @@ Feature: Nouns
     When the user chooses gender <choice>
     Then the answer was correct: <correct>
     Examples:
-      | noun      | gender | choice | correct |
-      | Umgebung  | f      | m      | false   |
-      | Gabel     | f      | f      | true    |
-      | Schlüssel | m      | m      | true    |
-      | Auto      | n      | f      | false   |
+      | noun      | gender    | choice    | correct |
+      | Umgebung  | feminine  | masculine | false   |
+      | Gabel     | feminine  | feminine  | true    |
+      | Schlüssel | masculine | masculine | true    |
+      | Auto      | neuter    | feminine  | false   |
