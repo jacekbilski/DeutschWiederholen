@@ -53,10 +53,20 @@ Resources:
       Integration:
         ContentHandling: CONVERT_TO_TEXT
         IntegrationHttpMethod: POST
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: ''
         PassthroughBehavior: WHEN_NO_MATCH
         Type: AWS_PROXY
         Uri: !Sub 'arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/${dictionariesLambda.Arn}/invocations'
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
       RequestParameters:
         method.request.path.name: true
+      CacheKeyParameters:
+        - 'method.request.path.name'
       ResourceId: !Ref restApiNameResource
       RestApiId: !Ref restApi
