@@ -9,5 +9,10 @@
     (= (:gender noun) answer))
   )
 
+(def gender-choices
+  #{{:text "der" :value :masculine}
+    {:text "die" :value :feminine}
+    {:text "das" :value :neuter}})
+
 (defn next-question []
-  (->Noun "Umgebung" :feminine))
+  (->Question (->Noun "Umgebung" :feminine) gender-choices))

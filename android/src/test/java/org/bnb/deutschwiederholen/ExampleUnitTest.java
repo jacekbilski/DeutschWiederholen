@@ -1,9 +1,15 @@
 package org.bnb.deutschwiederholen;
 
+import org.junit.Test;
+
+import java.util.Map;
+import java.util.Set;
+
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
+import clojure.lang.Keyword;
+import dw.core.Question;
 import dw.nouns.Noun;
-import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -44,8 +50,9 @@ public class ExampleUnitTest {
     IFn nextQuestion = Clojure.var("dw.nouns", "next-question");
     IFn verify = Clojure.var("dw.core", "verify");
     IFn keyword = Clojure.var("clojure.core", "keyword");
-    Noun noun = (Noun) nextQuestion.invoke();
-    Object result = verify.invoke(noun, keyword.invoke("feminine"));
+    Question question = (Question) nextQuestion.invoke();
+    Set<Map<Keyword, Object>> choices = (Set<Map<Keyword, Object>>) question.choices;
+    Object result = verify.invoke(question.question, choices.iterator().next().get(keyword.invoke("value")));
     assertThat(result).isEqualTo(true);
   }
 }
