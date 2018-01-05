@@ -63,11 +63,13 @@ public class QuestionActivity extends AppCompatActivity {
   private void check(View view) {
     int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
     Log.d("questions", "checkedRadioButtonId: " + checkedRadioButtonId);
-    RadioButton checkedRadioButton = findViewById(checkedRadioButtonId);
-    Log.d("questions", "checkedRadioButton: " + checkedRadioButton);
-    Log.d("questions", "checkedRadioButton.tag: " + checkedRadioButton.getTag());
-    IFn verify = Clojure.var("dw.core", "verify");
-    Object result = verify.invoke(question.question, checkedRadioButton.getTag());
-    Log.d("questions", "Correct? " + result);
+    if (checkedRadioButtonId != -1) {
+      RadioButton checkedRadioButton = findViewById(checkedRadioButtonId);
+      Log.d("questions", "checkedRadioButton: " + checkedRadioButton);
+      Log.d("questions", "checkedRadioButton.tag: " + checkedRadioButton.getTag());
+      IFn verify = Clojure.var("org.bnb.dw.core", "verify");
+      Object result = verify.invoke(question.question, checkedRadioButton.getTag());
+      Log.d("questions", "Correct? " + result);
+    }
   }
 }
