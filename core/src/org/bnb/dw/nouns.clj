@@ -1,5 +1,5 @@
-(ns dw.nouns
-  (:require [dw.core :refer :all]))
+(ns org.bnb.dw.nouns
+  (:require [org.bnb.dw.core :refer :all]))
 
 (defrecord Noun [word gender])
 

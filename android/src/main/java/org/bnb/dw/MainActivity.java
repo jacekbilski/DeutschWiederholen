@@ -1,4 +1,4 @@
-package org.bnb.deutschwiederholen;
+package org.bnb.dw;
 
 import android.app.Activity;
 import android.content.Intent;

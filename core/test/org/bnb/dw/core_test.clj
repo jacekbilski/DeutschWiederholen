@@ -1,6 +1,6 @@
-(ns dw.core-test
+(ns org.bnb.dw.core-test
   (:require [clojure.test :refer :all]
-            [dw.core :refer :all]))
+            [org.bnb.dw.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

@@ -1,6 +1,6 @@
 (use 'clojure.test)
-(use 'dw.core)
-(use 'dw.nouns)
+(use 'org.bnb.dw.core)
+(use 'org.bnb.dw.nouns)
 
 (def noun (atom []))
 

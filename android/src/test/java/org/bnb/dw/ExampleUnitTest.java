@@ -1,15 +1,16 @@
-package org.bnb.deutschwiederholen;
+package org.bnb.dw;
 
+import org.bnb.dw.core.Question;
+import org.bnb.dw.nouns.Noun;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 import clojure.lang.Keyword;
-import dw.core.Question;
-import dw.nouns.Noun;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -31,8 +32,8 @@ public class ExampleUnitTest {
   public void verifyClojureCall() {
     Noun noun = new Noun("Umgebung", "f");
     IFn require = Clojure.var("clojure.core", "require");
-    require.invoke(Clojure.read("dw.core"), Clojure.read("dw.nouns"));
-    IFn verify = Clojure.var("dw.core", "verify");
+    require.invoke(Clojure.read("org.bnb.dw.core"), Clojure.read("org.bnb.dw.nouns"));
+    IFn verify = Clojure.var("org.bnb.dw.core", "verify");
     try {
       Object result = verify.invoke(noun, "f");
       assertThat(result).isEqualTo(true);
@@ -46,13 +47,15 @@ public class ExampleUnitTest {
   @Test
   public void moreCompleteClojureRoundtrip() {
     IFn require = Clojure.var("clojure.core", "require");
-    require.invoke(Clojure.read("dw.core"), Clojure.read("dw.nouns"));
-    IFn nextQuestion = Clojure.var("dw.nouns", "next-question");
-    IFn verify = Clojure.var("dw.core", "verify");
+    require.invoke(Clojure.read("org.bnb.dw.core"), Clojure.read("org.bnb.dw.nouns"));
+    IFn nextQuestion = Clojure.var("org.bnb.dw.nouns", "next-question");
+    IFn verify = Clojure.var("org.bnb.dw.core", "verify");
     IFn keyword = Clojure.var("clojure.core", "keyword");
     Question question = (Question) nextQuestion.invoke();
     Set<Map<Keyword, Object>> choices = (Set<Map<Keyword, Object>>) question.choices;
-    Object result = verify.invoke(question.question, choices.iterator().next().get(keyword.invoke("value")));
+    Iterator<Map<Keyword, Object>> iterator = choices.iterator();
+    iterator.next();
+    Object result = verify.invoke(question.question, iterator.next().get(keyword.invoke("value")));
     assertThat(result).isEqualTo(true);
   }
 }

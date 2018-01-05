@@ -1,4 +1,4 @@
-package org.bnb.deutschwiederholen;
+package org.bnb.dw;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,14 +9,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import org.bnb.dw.core.Question;
+import org.bnb.dw.nouns.Noun;
+
 import java.util.Map;
 import java.util.Set;
 
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 import clojure.lang.Keyword;
-import dw.core.Question;
-import dw.nouns.Noun;
 
 public class QuestionActivity extends AppCompatActivity {
 
@@ -37,8 +38,8 @@ public class QuestionActivity extends AppCompatActivity {
 
   private void fetchQuestion() {
     IFn require = Clojure.var("clojure.core", "require");
-    require.invoke(Clojure.read("dw.core"), Clojure.read("dw.nouns"));
-    IFn nextQuestion = Clojure.var("dw.nouns", "next-question");
+    require.invoke(Clojure.read("org.bnb.dw.core"), Clojure.read("org.bnb.dw.nouns"));
+    IFn nextQuestion = Clojure.var("org.bnb.dw.nouns", "next-question");
     question = (Question) nextQuestion.invoke();
   }
 

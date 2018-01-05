@@ -1,4 +1,4 @@
-(ns dw.core)
+(ns org.bnb.dw.core)
 
 (defrecord Question [question choices])
 
