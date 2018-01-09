@@ -24,7 +24,7 @@ public class QuestionActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_question);
-    Button checkButton = findViewById(R.id.button);
+    Button checkButton = findViewById(R.id.checkButton);
     checkButton.setOnClickListener(this::check);
     radioGroup = findViewById(R.id.answersRadioGroup);
     question = fetchQuestion();
@@ -55,6 +55,12 @@ public class QuestionActivity extends AppCompatActivity {
       Log.d("questions", "checkedRadioButton.tag: " + checkedRadioButton.getTag());
       boolean result = verify(question, checkedRadioButton.getTag());
       Log.d("questions", "Correct? " + result);
+      Button checkButton = findViewById(R.id.checkButton);
+      if (result) {
+        checkButton.setText("OK");
+      } else {
+        checkButton.setText("Errr....");
+      }
     }
   }
 }

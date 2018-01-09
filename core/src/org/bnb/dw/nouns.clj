@@ -14,5 +14,9 @@
     {:text "die" :value :feminine}
     {:text "das" :value :neuter}})
 
+(def questions
+  (->Question (->Noun "Umgebung" :feminine) gender-choices)
+  (->Question (->Noun "Auto" :neuter) gender-choices))
+
 (defn next-question []
-  (->Question (->Noun "Umgebung" :feminine) gender-choices))
+  (rand-nth questions))
