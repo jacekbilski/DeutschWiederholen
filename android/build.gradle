@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
     }
 }
 
@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "org.bnb.dw"
-        minSdkVersion 23
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -53,5 +53,5 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.0'
     implementation 'dw:dw:0.1.0-SNAPSHOT'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:design:27.1.1'
 }
