@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':core')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -51,7 +51,6 @@ dependencies {
     })
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.volley:volley:1.1.0'
-    implementation 'dw:dw:0.1.0-SNAPSHOT'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:design:27.1.1'
 }

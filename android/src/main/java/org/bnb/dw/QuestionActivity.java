@@ -10,20 +10,20 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.bnb.dw.wrapper.Choice;
-import org.bnb.dw.wrapper.Question;
-
-import static org.bnb.dw.wrapper.Functions.fetchQuestion;
-import static org.bnb.dw.wrapper.Functions.verify;
+import org.bnb.dw.core.Choice;
+import org.bnb.dw.core.Question;
+import org.bnb.dw.core.Quiz;
 
 public class QuestionActivity extends AppCompatActivity {
 
   private static final String LOG_TAG = "QuestionActivity";
+  private Quiz quiz;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_question);
+    initQuiz();
     prepareView();
   }
 
@@ -33,8 +33,12 @@ public class QuestionActivity extends AppCompatActivity {
     prepareView();
   }
 
+  private void initQuiz() {
+    quiz = new Quiz();
+  }
+
   private void prepareView() {
-    Question question = fetchQuestion();
+    Question question = quiz.fetchQuestion();
     printQuestion(question);
     prepareChoices(question);
     prepareCheckButton(question);
@@ -42,7 +46,7 @@ public class QuestionActivity extends AppCompatActivity {
 
   private void printQuestion(Question question) {
     TextView text = findViewById(R.id.questionText);
-    text.setText(question.text);
+    text.setText(question.text());
   }
 
   private void prepareChoices(Question question) {
@@ -51,7 +55,7 @@ public class QuestionActivity extends AppCompatActivity {
     for (Choice choice : question.choices) {
       RadioButton newRadioButton = new RadioButton(this);
       newRadioButton.setText(choice.text);
-      newRadioButton.setTag(choice.value);
+      newRadioButton.setTag(choice);
       radioGroup.addView(newRadioButton);
     }
   }
@@ -65,7 +69,7 @@ public class QuestionActivity extends AppCompatActivity {
   private void check(Question question) {
     RadioButton selectedChoice = getSelectedChoice();
     if (selectedChoice != null) {
-      boolean result = verify(question, selectedChoice.getTag());
+      boolean result = quiz.verify(question, (Choice) selectedChoice.getTag());
       Log.d(LOG_TAG, "Correct? " + result);
       informUser(result);
       if (result)

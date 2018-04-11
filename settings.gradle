@@ -1,1 +1,1 @@
-include 'android', 'aws:lambdas'
+include 'core', 'android'
