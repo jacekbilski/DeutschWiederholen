@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_main.*
 import java.nio.charset.Charset
 
@@ -24,14 +27,13 @@ class MainActivity : Activity() {
     }
 
     private fun updateData() {
-//        val queue = Volley.newRequestQueue(this)
-//        val url = "https://github.com/jacekbilski/DeutschWiederholen/raw/master/data/nouns.csv"
-//
-//        val stringRequest = StringRequest(Request.Method.GET, url,
-//                { response -> save("nouns.csv", response) },
-//                { _ -> textView.text = "That didn't work!" })
-//        queue.add(stringRequest)
-        save("nouns.csv", "Umgebung\tf\nAuto\tn\n")
+        val queue = Volley.newRequestQueue(this)
+        val url = "https://github.com/jacekbilski/DeutschWiederholen/raw/master/data/nouns.csv"
+
+        val stringRequest = StringRequest(Request.Method.GET, url,
+                { response -> save("nouns.csv", response) },
+                { error -> Log.e(this.localClassName, "Getting nouns failed", error) })
+        queue.add(stringRequest)
     }
 
     private fun save(filename: String, response: String?) {
