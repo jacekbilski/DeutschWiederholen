@@ -40,5 +40,6 @@ class MainActivity : Activity() {
         val fos = openFileOutput(filename, Context.MODE_PRIVATE)
         fos.write((response ?: "").toByteArray(Charset.forName("UTF-8")))
         fos.close()
+        Log.d(this.localClassName, "Nouns updated")
     }
 }
