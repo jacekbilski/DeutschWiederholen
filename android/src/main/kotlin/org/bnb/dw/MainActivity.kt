@@ -30,7 +30,7 @@ class MainActivity : Activity() {
 
         val stringRequest = StringRequest(Request.Method.GET, url,
                 { response -> textView.text = "Response is: $response" },
-                { error -> textView.text = "That didn't work!" })
+                { _ -> textView.text = "That didn't work!" })
         queue.add(stringRequest)
     }
 }
