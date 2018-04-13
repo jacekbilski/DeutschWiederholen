@@ -37,6 +37,7 @@ class MainActivity : Activity() {
     }
 
     private fun save(filename: String, response: String?) {
+        deleteFile(filename)
         val fos = openFileOutput(filename, Context.MODE_PRIVATE)
         fos.write((response ?: "").toByteArray(Charset.forName("UTF-8")))
         fos.close()
