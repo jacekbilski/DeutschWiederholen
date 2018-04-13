@@ -6,10 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
+import com.opencsv.CSVParserBuilder
+import com.opencsv.CSVReaderBuilder
 import kotlinx.android.synthetic.main.activity_question.*
-import org.bnb.dw.core.Choice
-import org.bnb.dw.core.Question
-import org.bnb.dw.core.Quiz
+import org.bnb.dw.core.*
+import java.io.InputStreamReader
 
 class QuestionActivity : AppCompatActivity() {
     private var quiz: Quiz? = null
@@ -33,7 +34,18 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun initQuiz() {
-        quiz = Quiz()
+        val nouns = getNouns()
+        quiz = Quiz(nouns)
+    }
+
+    private fun getNouns(): List<Noun> {
+        val csvReader = CSVReaderBuilder(InputStreamReader(openFileInput("nouns.csv")))
+                .withCSVParser(CSVParserBuilder()
+                        .withSeparator('\t')
+                        .build())
+                .build()
+
+        return csvReader.readAll().map { line -> Noun(line[0], Gender.of(line[1])) }
     }
 
     private fun prepareView() {

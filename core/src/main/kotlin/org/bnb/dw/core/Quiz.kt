@@ -2,7 +2,7 @@ package org.bnb.dw.core
 
 import java.util.*
 
-class Quiz {
+class Quiz(nouns: List<Noun>) {
 
     private val questions: List<Question>
     private val random: Random
@@ -12,9 +12,7 @@ class Quiz {
                 Choice("der", Gender.MASCULINE),
                 Choice("die", Gender.FEMININE),
                 Choice("das", Gender.NEUTER))
-        questions = listOf(
-                Question(Noun("Umgebung", Gender.FEMININE), genderChoices),
-                Question(Noun("Auto", Gender.NEUTER), genderChoices))
+        questions = nouns.map { n -> Question(n, genderChoices) }
         random = Random()
     }
 
