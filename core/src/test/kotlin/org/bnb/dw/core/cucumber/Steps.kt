@@ -28,7 +28,7 @@ class Steps : En {
             val goodChoice = Choice("", noun.gender)
             val currentChoice = Choice("", Gender.valueOf(choice.toUpperCase()))
             val choices = setOf(goodChoice, currentChoice)
-            val question = Question(noun, choices)
+            val question = Question(QuestionType.GENDER, noun, choices)
             result = quiz.verify(question, currentChoice)
         }
 
@@ -36,7 +36,7 @@ class Steps : En {
             val goodChoice = Choice("", noun)
             val currentChoice = Choice("", Noun(choice, Gender.MASCULINE))
             val choices = setOf(goodChoice, currentChoice)
-            val question = Question(noun, choices)
+            val question = Question(QuestionType.NOUN, noun, choices)
             result = quiz.verify(question, currentChoice)
         }
 

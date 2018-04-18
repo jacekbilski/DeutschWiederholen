@@ -12,7 +12,7 @@ class Quiz(nouns: List<Noun>) {
                 Choice("der", Gender.MASCULINE),
                 Choice("die", Gender.FEMININE),
                 Choice("das", Gender.NEUTER))
-        questions = nouns.map { n -> Question(n, genderChoices) }
+        questions = nouns.map { n -> Question(QuestionType.GENDER, n, genderChoices) }
         random = Random()
     }
 
@@ -21,6 +21,10 @@ class Quiz(nouns: List<Noun>) {
     }
 
     fun verify(question: Question, answer: Choice): Boolean {
-        return question.noun.gender == answer.value
+        return if (question.type == QuestionType.GENDER) {
+            question.noun.gender == answer.value
+        } else {
+            question.noun == answer.value
+        }
     }
 }
