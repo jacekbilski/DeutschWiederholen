@@ -12,7 +12,9 @@ class Quiz(nouns: List<Noun>) {
                 Choice("der", Gender.MASCULINE),
                 Choice("die", Gender.FEMININE),
                 Choice("das", Gender.NEUTER))
-        questions = nouns.map { n -> Question(QuestionType.GENDER, n, genderChoices) }
+        val genderQuestions = nouns.map { n -> Question(QuestionType.GENDER, n, genderChoices) }
+        val nounQuestions = nouns.map { n -> Question(QuestionType.NOUN, n, nouns.map { nn -> Choice(nn.word, nn)}.toSet()) }
+        questions = genderQuestions.plus(nounQuestions)
         random = Random()
     }
 

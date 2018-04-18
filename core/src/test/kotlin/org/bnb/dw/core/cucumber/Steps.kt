@@ -15,12 +15,12 @@ class Steps : En {
 
     init {
         Given("^a noun (.+) with a gender (.+)$") { word: String, gender: String ->
-            noun = Noun(word, Gender.valueOf(gender.toUpperCase()))
+            noun = Noun(word, Gender.valueOf(gender.toUpperCase()), "")
             nouns[word] = noun
         }
 
         Given("^a noun (.+) with a translation (.+)$") {word: String, translation: String ->
-            noun = Noun(word, Gender.MASCULINE)
+            noun = Noun(word, Gender.MASCULINE, translation)
             nouns[word] = noun
         }
 
@@ -34,7 +34,7 @@ class Steps : En {
 
         When("the user chooses noun (.+)") { choice: String ->
             val goodChoice = Choice("", noun)
-            val currentChoice = Choice("", Noun(choice, Gender.MASCULINE))
+            val currentChoice = Choice("", Noun(choice, Gender.MASCULINE, ""))
             val choices = setOf(goodChoice, currentChoice)
             val question = Question(QuestionType.NOUN, noun, choices)
             result = quiz.verify(question, currentChoice)

@@ -45,7 +45,7 @@ class QuestionActivity : AppCompatActivity() {
                         .build())
                 .build()
 
-        return csvReader.readAll().map { line -> Noun(line[0], Gender.of(line[1])) }
+        return csvReader.readAll().map { line -> Noun(line[0], Gender.of(line[1]), line[2]) }
     }
 
     private fun prepareView() {
