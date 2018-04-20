@@ -1,7 +1,7 @@
 package org.bnb.dw.core
 
-enum class Gender {
-    MASCULINE, FEMININE, NEUTER;
+enum class Gender(val article: kotlin.String) {
+    MASCULINE("der"), FEMININE("die"), NEUTER("das");
 
     companion object {
         fun of(code: String): Gender {
