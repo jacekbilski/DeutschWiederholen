@@ -14,13 +14,8 @@ class Steps : En {
     private lateinit var noun: Noun
 
     init {
-        Given("^a noun (.+) with a gender (.+)$") { word: String, gender: String ->
-            noun = Noun(word, Gender.valueOf(gender.toUpperCase()), "")
-            nouns[word] = noun
-        }
-
-        Given("^a noun (.+) with a translation (.+)$") {word: String, translation: String ->
-            noun = Noun(word, Gender.MASCULINE, translation)
+        Given("^a noun (.+) with a gender (.+) and a translation (.+)$") { word: String, gender: String, translation: String ->
+            noun = Noun(word, Gender.valueOf(gender.toUpperCase()), translation)
             nouns[word] = noun
         }
 
@@ -34,14 +29,30 @@ class Steps : En {
 
         When("the user chooses noun (.+)") { choice: String ->
             val goodChoice = Choice("", noun)
-            val currentChoice = Choice("", Noun(choice, Gender.MASCULINE, ""))
+            val currentChoice = Choice("", nouns[choice] ?: WRONG_NOUN)
             val choices = setOf(goodChoice, currentChoice)
             val question = Question(QuestionType.NOUN, noun, choices)
+            result = quiz.verify(question, currentChoice)
+        }
+
+        When("the user chooses translation (.+)") { choice: String ->
+            val goodChoice = Choice("", noun)
+            val currentChoice = Choice("", findNounByTranslation(choice)?: WRONG_NOUN)
+            val choices = setOf(goodChoice, currentChoice)
+            val question = Question(QuestionType.TRANSLATION, noun, choices)
             result = quiz.verify(question, currentChoice)
         }
 
         Then("the answer was correct: (\\w+)") { correct: Boolean ->
             assertThat(result).isEqualTo(correct)
         }
+    }
+
+    private fun findNounByTranslation(translation: String): Noun? {
+        return nouns.entries.find { e -> e.value.translation == translation }?.value
+    }
+
+    companion object {
+        private val WRONG_NOUN: Noun = Noun("a", Gender.MASCULINE, "b")
     }
 }

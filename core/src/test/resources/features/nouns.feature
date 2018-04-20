@@ -1,21 +1,30 @@
 Feature: Nouns
 
   Scenario Outline: System tests for proper gender of a noun
-    Given a noun <noun> with a gender <gender>
+    Given a noun <noun> with a gender <gender> and a translation <translation>
     When the user chooses gender <choice>
     Then the answer was correct: <correct>
     Examples:
-      | noun      | gender    | choice    | correct |
-      | Umgebung  | feminine  | masculine | false   |
-      | Gabel     | feminine  | feminine  | true    |
-      | Schlüssel | masculine | masculine | true    |
-      | Auto      | neuter    | feminine  | false   |
+      | noun      | gender    | translation | choice    | correct |
+      | Umgebung  | feminine  | środowisko  | masculine | false   |
+      | Gabel     | feminine  | widelec     | feminine  | true    |
+      | Schlüssel | masculine | klucz       | masculine | true    |
+      | Auto      | neuter    | samochód    | feminine  | false   |
 
   Scenario Outline: System tests for proper noun when translation presented
-    Given a noun <noun> with a translation <translation>
+    Given a noun <noun> with a gender <gender> and a translation <translation>
     When the user chooses noun <choice>
     Then the answer was correct: <correct>
     Examples:
-      | noun     | translation             | choice | correct |
-      | Flut     | powódź                  | Flut   | true    |
-      | Umgebung | środowisko, environment | Gabel  | false   |
+      | noun     | gender   | translation             | choice | correct |
+      | Flut     | feminine | powódź                  | Flut   | true    |
+      | Umgebung | feminine | środowisko, environment | Gabel  | false   |
+
+  Scenario Outline: System tests for proper translation when noun presented
+    Given a noun <noun> with a gender <gender> and a translation <translation>
+    When the user chooses translation <choice>
+    Then the answer was correct: <correct>
+    Examples:
+      | noun     | gender   | translation             | choice   | correct |
+      | Flut     | feminine | powódź                  | powódź   | true    |
+      | Umgebung | feminine | środowisko, environment | samochód | false   |

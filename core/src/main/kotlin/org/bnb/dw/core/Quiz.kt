@@ -13,8 +13,19 @@ class Quiz(nouns: List<Noun>) {
                 Choice("die", Gender.FEMININE),
                 Choice("das", Gender.NEUTER))
         val genderQuestions = nouns.map { n -> Question(QuestionType.GENDER, n, genderChoices) }
-        val nounQuestions = nouns.map { n -> Question(QuestionType.NOUN, n, nouns.map { nn -> Choice(nn.gender.article + " " + nn.word, nn)}.toSet()) }
-        questions = genderQuestions.plus(nounQuestions)
+        val nounQuestions = nouns
+                .map { n -> Question(
+                        QuestionType.NOUN,
+                        n,
+                        nouns.map { nn -> Choice(nn.gender.article + " " + nn.word, nn)}.toSet()) }
+        val translationQuestions = nouns
+                .map { n -> Question(
+                        QuestionType.TRANSLATION,
+                        n,
+                        nouns.map { nn -> Choice(nn.translation, nn) }.toSet()) }
+        questions = genderQuestions
+                .plus(nounQuestions)
+                .plus(translationQuestions)
         random = Random()
     }
 
@@ -23,10 +34,10 @@ class Quiz(nouns: List<Noun>) {
     }
 
     fun verify(question: Question, answer: Choice): Boolean {
-        return if (question.type == QuestionType.GENDER) {
-            question.noun.gender == answer.value
-        } else {
-            question.noun == answer.value
+        return when (question.type) {
+            QuestionType.GENDER -> question.noun.gender == answer.value
+            QuestionType.NOUN -> question.noun == answer.value
+            QuestionType.TRANSLATION -> question.noun == answer.value
         }
     }
 }
