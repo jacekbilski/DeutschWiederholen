@@ -86,7 +86,7 @@ class QuestionActivity : AppCompatActivity() {
         val selectedChoice = selectedChoice
         if (selectedChoice != null) {
             val result = quiz!!.verify(question, selectedChoice.tag as Choice)
-            Log.d(LOG_TAG, "Correct? $result")
+            Log.d(this.localClassName, "Correct? $result")
             informUser(result)
             if (result)
                 enableNavigationFurther()
@@ -107,10 +107,5 @@ class QuestionActivity : AppCompatActivity() {
     private fun nextQuestion() {
         val intent = Intent(this, QuestionActivity::class.java)
         startActivity(intent)
-    }
-
-    companion object {
-
-        private const val LOG_TAG = "QuestionActivity"
     }
 }

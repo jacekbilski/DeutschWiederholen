@@ -15,7 +15,7 @@ class MainActivity : Activity() {
     }
 
     private fun startQuizFab() {
-        Log.d("tag", "Clicked")
+        Log.d(this.localClassName, "Clicked")
         val intent = Intent(this, QuestionActivity::class.java)
         startActivity(intent)
     }
