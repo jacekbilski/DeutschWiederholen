@@ -2,6 +2,7 @@ package org.bnb.dw
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.RadioButton
@@ -10,7 +11,8 @@ import com.opencsv.CSVParserBuilder
 import com.opencsv.CSVReaderBuilder
 import kotlinx.android.synthetic.main.activity_question.*
 import org.bnb.dw.core.*
-import java.io.InputStreamReader
+import java.io.File
+import java.io.FileReader
 
 class QuestionActivity : AppCompatActivity() {
     private var quiz: Quiz? = null
@@ -34,17 +36,23 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun initQuiz() {
-        val nouns = getNouns()
-        quiz = Quiz(nouns)
+        if (Environment.getExternalStorageState() in
+                setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)) {
+            val filesPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/dw/"
+            val nouns = getNouns(filesPath)
+            quiz = Quiz(nouns)
+        } else {
+            Log.e(this.localClassName, "Unable to load data, media not ready")
+            throw IllegalStateException("Unable to read media directory")
+        }
     }
 
-    private fun getNouns(): List<Noun> {
-        val csvReader = CSVReaderBuilder(InputStreamReader(openFileInput("nouns.csv")))
+    private fun getNouns(filesPath: String): List<Noun> {
+        val csvReader = CSVReaderBuilder(FileReader(File(filesPath + "nouns.csv")))
                 .withCSVParser(CSVParserBuilder()
                         .withSeparator('\t')
                         .build())
                 .build()
-
         return csvReader.readAll().map { line -> Noun(line[0], Gender.of(line[1]), line[2]) }
     }
 
