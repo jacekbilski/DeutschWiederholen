@@ -91,7 +91,7 @@ class QuestionActivity : AppCompatActivity() {
             informUser(result)
             persistAnswer(question, result)
             if (result)
-                enableNavigationFurther()
+                nextQuestion()
         }
     }
 
@@ -106,11 +106,6 @@ class QuestionActivity : AppCompatActivity() {
         val text = if (result) "OK" else "Errr...."
         val toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
         toast.show()
-    }
-
-    private fun enableNavigationFurther() {
-        checkButton.setText(R.string.next)
-        checkButton.setOnClickListener { nextQuestion() }
     }
 
     private fun nextQuestion() {
