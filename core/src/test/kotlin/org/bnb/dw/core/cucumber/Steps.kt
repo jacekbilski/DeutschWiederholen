@@ -3,6 +3,7 @@ package org.bnb.dw.core.cucumber
 import cucumber.api.java8.En
 import org.assertj.core.api.Assertions.assertThat
 import org.bnb.dw.core.*
+import java.util.*
 
 class Steps : En {
 
@@ -15,7 +16,7 @@ class Steps : En {
 
     init {
         Given("^a noun (.+) with a gender (.+) and a translation (.+)$") { word: String, gender: String, translation: String ->
-            noun = Noun(1, word, Gender.valueOf(gender.toUpperCase()), translation)
+            noun = Noun(Random().nextLong(), word, Gender.valueOf(gender.toUpperCase()), translation)
             nouns[word] = noun
         }
 
@@ -53,6 +54,6 @@ class Steps : En {
     }
 
     companion object {
-        private val WRONG_NOUN: Noun = Noun(13, "a", Gender.MASCULINE, "b")
+        private val WRONG_NOUN: Noun = Noun(Random().nextLong(), "a", Gender.MASCULINE, "b")
     }
 }

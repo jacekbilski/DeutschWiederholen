@@ -1,4 +1,18 @@
-id	word	gender	translation
-1	Umgebung	f	środowisko, environment
-2	Auto	n	auto, samochód
-3	Flut	f	powódź
+word,gender,translation,plural ending
+Umgebung,f,environment,-en
+Auto,n,car,-s
+Flut,f,flood,-en
+Zeit,f,time,-en
+Projekt,n,project,-e
+Tag,m,day,-e
+Woche,f,week,-n
+Monat,m,month,-e
+Jahr,n,year,-e
+Mal,n,durch eine bestimmte Angabe oder Reihenfolge gekennzeichneter Zeitpunkt eines sich wiederholenden oder als wiederholbar geltenden Geschehens,-e
+Regierung,f,government,-en
+Ritter,m,knight,-
+Akku,m,battery,-s
+Mehrheit,f,majority,-en
+Empfänger,m,receiver,-
+Stunde,f,hour,-n
+Minute,f,minute,-n

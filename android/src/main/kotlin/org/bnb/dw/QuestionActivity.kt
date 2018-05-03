@@ -52,10 +52,10 @@ class QuestionActivity : AppCompatActivity() {
         val csvReader = CSVReaderBuilder(FileReader(File(filesPath, "nouns.csv")))
                 .withSkipLines(1)
                 .withCSVParser(CSVParserBuilder()
-                        .withSeparator('\t')
+                        .withSeparator(',')
                         .build())
                 .build()
-        return csvReader.readAll().map { line -> Noun(line[0].toLong(), line[1], Gender.of(line[2]), line[3]) }
+        return csvReader.readAll().mapIndexed { index, line -> Noun(index.toLong(), line[0], Gender.of(line[1]), line[2]) }
     }
 
     private fun prepareView() {
@@ -98,7 +98,7 @@ class QuestionActivity : AppCompatActivity() {
     private fun persistAnswer(question: Question, result: Boolean) {
         val file = File(filesPath, "answers.csv")
         val writer = FileWriter(file, true)
-        writer.append("NOUN\t${question.type.name}\t${question.noun.id}\t$result\n")
+        writer.append("NOUN,${question.type.name},${question.noun.id},$result\n")
         writer.close()
     }
 
