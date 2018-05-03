@@ -23,7 +23,7 @@ class Steps : En {
         When("the user chooses gender (.+)") { choice: String ->
             val goodChoice = Choice("", noun.gender)
             val currentChoice = Choice("", Gender.valueOf(choice.toUpperCase()))
-            val choices = setOf(goodChoice, currentChoice)
+            val choices = listOf(goodChoice, currentChoice)
             val question = Question(QuestionType.GENDER, noun, choices)
             result = quiz.verify(question, currentChoice)
         }
@@ -31,7 +31,7 @@ class Steps : En {
         When("the user chooses noun (.+)") { choice: String ->
             val goodChoice = Choice("", noun)
             val currentChoice = Choice("", nouns[choice] ?: WRONG_NOUN)
-            val choices = setOf(goodChoice, currentChoice)
+            val choices = listOf(goodChoice, currentChoice)
             val question = Question(QuestionType.NOUN, noun, choices)
             result = quiz.verify(question, currentChoice)
         }
@@ -39,7 +39,7 @@ class Steps : En {
         When("the user chooses translation (.+)") { choice: String ->
             val goodChoice = Choice("", noun)
             val currentChoice = Choice("", findNounByTranslation(choice)?: WRONG_NOUN)
-            val choices = setOf(goodChoice, currentChoice)
+            val choices = listOf(goodChoice, currentChoice)
             val question = Question(QuestionType.TRANSLATION, noun, choices)
             result = quiz.verify(question, currentChoice)
         }

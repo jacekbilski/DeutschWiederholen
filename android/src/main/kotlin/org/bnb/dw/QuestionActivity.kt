@@ -71,7 +71,7 @@ class QuestionActivity : AppCompatActivity() {
 
     private fun prepareChoices(question: Question) {
         answersRadioGroup.removeAllViews()
-        for (choice in question.choices.shuffled()) {
+        for (choice in question.choices) {
             val newRadioButton = RadioButton(this)
             newRadioButton.text = choice.text
             newRadioButton.tag = choice
