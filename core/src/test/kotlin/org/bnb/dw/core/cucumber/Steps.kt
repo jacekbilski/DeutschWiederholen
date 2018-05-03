@@ -15,7 +15,7 @@ class Steps : En {
 
     init {
         Given("^a noun (.+) with a gender (.+) and a translation (.+)$") { word: String, gender: String, translation: String ->
-            noun = Noun(word, Gender.valueOf(gender.toUpperCase()), translation)
+            noun = Noun(1, word, Gender.valueOf(gender.toUpperCase()), translation)
             nouns[word] = noun
         }
 
@@ -53,6 +53,6 @@ class Steps : En {
     }
 
     companion object {
-        private val WRONG_NOUN: Noun = Noun("a", Gender.MASCULINE, "b")
+        private val WRONG_NOUN: Noun = Noun(13, "a", Gender.MASCULINE, "b")
     }
 }

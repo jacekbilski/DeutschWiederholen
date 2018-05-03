@@ -13,9 +13,11 @@ import kotlinx.android.synthetic.main.activity_question.*
 import org.bnb.dw.core.*
 import java.io.File
 import java.io.FileReader
+import java.io.FileWriter
 
 class QuestionActivity : AppCompatActivity() {
     private var quiz: Quiz? = null
+    private val filesPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/dw/"
 
     private val selectedChoice: RadioButton?
         get() {
@@ -38,7 +40,6 @@ class QuestionActivity : AppCompatActivity() {
     private fun initQuiz() {
         if (Environment.getExternalStorageState() in
                 setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)) {
-            val filesPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath + "/dw/"
             val nouns = getNouns(filesPath)
             quiz = Quiz(nouns)
         } else {
@@ -48,12 +49,13 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun getNouns(filesPath: String): List<Noun> {
-        val csvReader = CSVReaderBuilder(FileReader(File(filesPath + "nouns.csv")))
+        val csvReader = CSVReaderBuilder(FileReader(File(filesPath, "nouns.csv")))
+                .withSkipLines(1)
                 .withCSVParser(CSVParserBuilder()
                         .withSeparator('\t')
                         .build())
                 .build()
-        return csvReader.readAll().map { line -> Noun(line[0], Gender.of(line[1]), line[2]) }
+        return csvReader.readAll().map { line -> Noun(line[0].toLong(), line[1], Gender.of(line[2]), line[3]) }
     }
 
     private fun prepareView() {
@@ -86,11 +88,18 @@ class QuestionActivity : AppCompatActivity() {
         val selectedChoice = selectedChoice
         if (selectedChoice != null) {
             val result = quiz!!.verify(question, selectedChoice.tag as Choice)
-            Log.d(this.localClassName, "Correct? $result")
             informUser(result)
+            persistAnswer(question, result)
             if (result)
                 enableNavigationFurther()
         }
+    }
+
+    private fun persistAnswer(question: Question, result: Boolean) {
+        val file = File(filesPath, "answers.csv")
+        val writer = FileWriter(file, true)
+        writer.append("NOUN\t${question.type.name}\t${question.noun.id}\t$result\n")
+        writer.close()
     }
 
     private fun informUser(result: Boolean) {
