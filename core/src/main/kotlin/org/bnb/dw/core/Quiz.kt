@@ -2,12 +2,13 @@ package org.bnb.dw.core
 
 import java.util.*
 
-class Quiz(private val nouns: List<Noun>) {
+class Quiz(private val repo: Repository) {
 
-    private val questions: List<Question>
+    private lateinit var questions: List<Question>
     private val random: Random = Random()
 
-    init {
+    private fun prepareQuestions() {
+        val nouns = repo.getNouns()
         val genderQuestions = nouns.map { n -> prepareQuestion(QuestionType.GENDER, n) }
         val nounQuestions = nouns.map { n -> prepareQuestion(QuestionType.NOUN, n) }
         val translationQuestions = nouns.map { n -> prepareQuestion(QuestionType.TRANSLATION, n) }
@@ -39,18 +40,22 @@ class Quiz(private val nouns: List<Noun>) {
     }
 
     private fun proposeAnswers(noun: Noun): List<Noun> {
-        return nouns.minus(noun).shuffled().take(2).plus(noun).shuffled()
+        return repo.getNouns().minus(noun).shuffled().take(2).plus(noun).shuffled()
     }
 
     fun fetchQuestion(): Question {
+        if (!this::questions.isInitialized)
+            prepareQuestions()
         return questions[random.nextInt(questions.size)]
     }
 
     fun verify(question: Question, answer: Choice): Boolean {
-        return when (question.type) {
+        val result = when (question.type) {
             QuestionType.GENDER -> question.noun.gender == answer.value
             QuestionType.NOUN -> question.noun == answer.value
             QuestionType.TRANSLATION -> question.noun == answer.value
         }
+        repo.persistAnswer(question, result)
+        return result
     }
 }
