@@ -28,3 +28,8 @@ Feature: Nouns
       | noun     | gender   | translation             | choice   | correct |
       | Flut     | feminine | powódź                  | powódź   | true    |
       | Umgebung | feminine | środowisko, environment | samochód | false   |
+
+    Scenario: Every answer the user is giving is recorded
+      Given a question
+      When the user answers the question
+      Then the question with correctness of answer are recorded
