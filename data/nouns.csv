@@ -39,7 +39,7 @@ Stand,m,"status, stand",⸚e
 Angebot,n,offer,-e
 Beispiel,n,example,-e
 Lösung,f,solution,-en
-Modul,b,module,-e
+Modul,n,module,-e
 Präsentation,f,presentation,-en
 Punkt,m,point,-e
 Meldung,f,"report, message",-en
@@ -66,3 +66,4 @@ Donnerstag,m,Thursday,-e
 Freitag,m,Friday,-e
 Samstag,m,Saturday,-e
 Sonntag,m,Sunday,-e
+Inhalt,m,content,-e
