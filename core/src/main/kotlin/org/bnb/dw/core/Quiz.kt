@@ -40,7 +40,7 @@ class Quiz(private val repo: Repository) {
     }
 
     private fun proposeAnswers(noun: Noun): List<Noun> {
-        return repo.getNouns().minus(noun).shuffled().take(2).plus(noun).shuffled()
+        return repo.getNouns().minus(noun).shuffled().take(4).plus(noun).shuffled()
     }
 
     fun fetchQuestion(): Question {
