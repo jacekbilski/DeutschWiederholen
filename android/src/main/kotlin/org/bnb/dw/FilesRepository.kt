@@ -9,6 +9,7 @@ import org.bnb.dw.core.Repository
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.util.*
 
 class FilesRepository(private val basePath: String): Repository {
     private lateinit var nouns: List<Noun>
@@ -32,7 +33,8 @@ class FilesRepository(private val basePath: String): Repository {
     override fun persistAnswer(question: Question, result: Boolean) {
         val file = File(basePath, "answers.csv")
         val writer = FileWriter(file, true)
-        writer.append("NOUN,${question.type.name},${question.noun.id},$result\n")
+        val timestamp = Date().time
+        writer.append("NOUN,${question.type.name},${question.noun.id},$timestamp,$result\n")
         writer.close()
     }
 }
