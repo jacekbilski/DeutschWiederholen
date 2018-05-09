@@ -12,7 +12,7 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
             override fun hasNext(): Boolean = true
 
             override fun next(): Question {
-        val nouns = repo.getNouns()
+                val nouns = repo.getNouns()
                 val noun = nouns[random.nextInt(nouns.size)]
                 return when (random.nextInt(settings.genderWeight + settings.nounWeight + settings.translationWeight) + 1) {
                     in 1..settings.genderWeight -> prepareQuestion(QuestionType.GENDER, noun)
@@ -35,9 +35,9 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
             }
             QuestionType.NOUN ->
                 Question(
-                    QuestionType.NOUN,
-                    noun,
-                    proposeAnswers(noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn)})
+                        QuestionType.NOUN,
+                        noun,
+                        proposeAnswers(noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
             QuestionType.TRANSLATION ->
                 Question(
                         QuestionType.TRANSLATION,

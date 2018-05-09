@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context="org.bnb.dw.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/app_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"/>
+
     <TextView
         android:id="@+id/greeting_message"
         android:layout_width="wrap_content"

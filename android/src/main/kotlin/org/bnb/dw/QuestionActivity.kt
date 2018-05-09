@@ -1,9 +1,11 @@
 package org.bnb.dw
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.PreferenceManager
 import android.util.Log
 import android.widget.RadioButton
 import android.widget.Toast
@@ -42,11 +44,15 @@ class QuestionActivity : AppCompatActivity() {
     private fun initQuiz() {
         if (Environment.getExternalStorageState() in
                 setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)) {
-            quiz = Quiz(repo, Settings(60, 20, 20))
+            quiz = Quiz(repo, translateSettings(PreferenceManager.getDefaultSharedPreferences(this)))
         } else {
             Log.e(this.localClassName, "Unable to load data, media not ready")
             throw IllegalStateException("Unable to read media directory")
         }
+    }
+
+    private fun translateSettings(preferences: SharedPreferences): Settings {
+        return Settings(preferences.getInt("pref_nouns_gender_weight", -1), preferences.getInt("pref_nouns_gender_weight", -1), preferences.getInt("pref_nouns_gender_weight", -1))
     }
 
     private fun prepareView() {

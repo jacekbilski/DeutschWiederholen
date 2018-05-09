@@ -44,7 +44,7 @@ class Steps : En {
 
         When("^the user chooses translation (.+)$") { choice: String ->
             val goodChoice = Choice("", noun)
-            val currentChoice = Choice("", findNounByTranslation(choice)?: WRONG_NOUN)
+            val currentChoice = Choice("", findNounByTranslation(choice) ?: WRONG_NOUN)
             val choices = listOf(goodChoice, currentChoice)
             val question = Question(QuestionType.TRANSLATION, noun, choices)
             result = quiz.verify(question, currentChoice)
