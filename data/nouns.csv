@@ -8,7 +8,7 @@ Tag,m,day,-e
 Woche,f,week,-n
 Monat,m,month,-e
 Jahr,n,year,-e
-Mal,n,durch eine bestimmte Angabe oder Reihenfolge gekennzeichneter Zeitpunkt eines sich wiederholenden oder als wiederholbar geltenden Geschehens,-e
+Mal,n,"times, ie. one time",-e
 Regierung,f,government,-en
 Ritter,m,knight,-
 Akku,m,battery,-s
@@ -29,7 +29,7 @@ Abend,m,evening,-e
 Nacht,f,night,⸚e
 Mitternacht,f,midnight,⸚e
 Aufgabe,f,task,-n
-Anzeige,f,"announcement,advertisement",-n
+Anzeige,f,"announcement, advertisement",-n
 Aussage,f,statement,-n
 Behörde,f,authority,-n
 Ereignis,n,event,-se
@@ -67,3 +67,28 @@ Freitag,m,Friday,-e
 Samstag,m,Saturday,-e
 Sonntag,m,Sunday,-e
 Inhalt,m,content,-e
+Handy,n,mobile,-s
+Computer,m,computer,-
+App,f,app,-s
+Software,f,software,-s
+Fern­se­her,m,tv,-
+Internet,n,Internet,
+Notebook,n,notebook,-s
+Laptop,m,laptop,-s
+Entscheidung,f,decision,-en
+Wissen,n,knowledge,
+Partner,m,partner,-
+Ding,n,thing,-e
+Farbe,f,colour,-n
+Dessert,n,dessert,-s
+Käse,m,cheese,-
+Frage,f,question,-n
+Pause,f,pause,-n
+Sprache,f,language,-n
+Turm,m,tower,⸚e
+Gefühl,n,feeling,-e
+Kompetenz,f,competency,-en
+Moment,n,moment,-e
+Name,m,name,-n
+Lösung,f,solution,-en
+Sitte,f,"custom, ritual",-n
