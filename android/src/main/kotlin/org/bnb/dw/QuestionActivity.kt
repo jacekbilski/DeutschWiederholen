@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_question.*
 import org.bnb.dw.core.Choice
 import org.bnb.dw.core.Question
 import org.bnb.dw.core.Quiz
+import org.bnb.dw.core.Settings
 
 class QuestionActivity : AppCompatActivity() {
     private var quiz: Quiz? = null
@@ -41,7 +42,7 @@ class QuestionActivity : AppCompatActivity() {
     private fun initQuiz() {
         if (Environment.getExternalStorageState() in
                 setOf(Environment.MEDIA_MOUNTED, Environment.MEDIA_MOUNTED_READ_ONLY)) {
-            quiz = Quiz(repo)
+            quiz = Quiz(repo, Settings(60, 20, 20))
         } else {
             Log.e(this.localClassName, "Unable to load data, media not ready")
             throw IllegalStateException("Unable to read media directory")

@@ -2,19 +2,26 @@ package org.bnb.dw.core
 
 import java.util.*
 
-class Quiz(private val repo: Repository) {
+class Quiz(private val repo: Repository, private val settings: Settings) {
 
-    private lateinit var questions: List<Question>
     private val random: Random = Random()
+    private val questions: Iterator<Question>
 
-    private fun prepareQuestions() {
+    init {
+        questions = object : Iterator<Question> {
+            override fun hasNext(): Boolean = true
+
+            override fun next(): Question {
         val nouns = repo.getNouns()
-        val genderQuestions = nouns.map { n -> prepareQuestion(QuestionType.GENDER, n) }
-        val nounQuestions = nouns.map { n -> prepareQuestion(QuestionType.NOUN, n) }
-        val translationQuestions = nouns.map { n -> prepareQuestion(QuestionType.TRANSLATION, n) }
-        questions = genderQuestions
-                .plus(nounQuestions)
-                .plus(translationQuestions)
+                val noun = nouns[random.nextInt(nouns.size)]
+                return when (random.nextInt(settings.genderWeight + settings.nounWeight + settings.translationWeight) + 1) {
+                    in 1..settings.genderWeight -> prepareQuestion(QuestionType.GENDER, noun)
+                    in settings.genderWeight + 1..settings.genderWeight + settings.nounWeight -> prepareQuestion(QuestionType.NOUN, noun)
+                    in settings.genderWeight + settings.nounWeight + 1..settings.genderWeight + settings.nounWeight + settings.translationWeight -> prepareQuestion(QuestionType.TRANSLATION, noun)
+                    else -> throw IllegalStateException("when expression not exhaustive")
+                }
+            }
+        }
     }
 
     private fun prepareQuestion(type: QuestionType, noun: Noun): Question {
@@ -44,9 +51,7 @@ class Quiz(private val repo: Repository) {
     }
 
     fun fetchQuestion(): Question {
-        if (!this::questions.isInitialized)
-            prepareQuestions()
-        return questions[random.nextInt(questions.size)]
+        return questions.next()
     }
 
     fun verify(question: Question, answer: Choice): Boolean {
