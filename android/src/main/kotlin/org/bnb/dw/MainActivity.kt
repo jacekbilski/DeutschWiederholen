@@ -1,12 +1,11 @@
 package org.bnb.dw
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,7 +14,6 @@ class MainActivity : Activity() {
     }
 
     private fun startQuizFab() {
-        Log.d(this.localClassName, "Clicked")
         val intent = Intent(this, QuestionActivity::class.java)
         startActivity(intent)
     }

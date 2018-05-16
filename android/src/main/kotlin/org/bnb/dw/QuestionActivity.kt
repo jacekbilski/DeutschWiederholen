@@ -26,6 +26,10 @@ class QuestionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question)
         initQuiz()
+    }
+
+    override fun onStart() {
+        super.onStart()
         prepareView()
     }
 
