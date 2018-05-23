@@ -12,12 +12,15 @@ class Steps : En {
     private var result: Boolean = false
 
     private val repository = RepositoryDouble()
-    private var settings: Settings = Settings(1, 1, 1)
-    private var quiz: Quiz = Quiz(repository, settings)
+    private var settings = Settings(1, 1, 1)
+    private var quiz = Quiz(repository, settings)
+    private val progressEvaluator = ProgressEvaluator(repository)
 
     private var nouns: MutableMap<String, Noun> = mutableMapOf()
     private lateinit var noun: Noun
     private lateinit var question: Question
+    private lateinit var questionType: QuestionType
+    private lateinit var levelOfKnowledge: LevelOfKnowledge
     private var generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.NOUN, 0), Pair(QuestionType.TRANSLATION, 0))
 
     init {
@@ -65,7 +68,7 @@ class Steps : En {
         }
 
         Then("^the question with correctness of answer are recorded$") {
-            assertThat(repository.persistedAnswers).isEqualTo(1)
+            assertThat(repository.persistedAnswers.size).isEqualTo(1)
         }
 
         Given("^weight for gender questions of (.+)$") { weight: Int ->
@@ -84,7 +87,7 @@ class Steps : En {
             val repo = RepositoryDouble()
             repo.staticNouns = listOf(SOME_NOUN)
             quiz = Quiz(repo, settings)
-            for (i in 1..10000) {
+            for (i in 1..20000) {
                 val question = quiz.fetchQuestion()
                 generatedQuestionTypes[question.type] = generatedQuestionTypes.getValue(question.type) + 1
             }
@@ -95,6 +98,34 @@ class Steps : En {
             val thisTypeQuestions = generatedQuestionTypes.getOrDefault(QuestionType.valueOf(type.toUpperCase()), -1)
             val expected = 100.0 * thisTypeQuestions / totalQuestions
             assertThat(probability).isCloseTo(expected, Percentage.withPercentage(5.0))
+        }
+
+        Given("^a word$") {
+            noun = SOME_NOUN
+        }
+
+        Given("^a question type") {
+            questionType = QuestionType.NOUN
+        }
+
+        Given("^t?h?e?n? ?(\\d+) (i?n?)correct answers$") { no: Int, corr: String ->
+            question = Question(questionType, noun, emptyList())
+            val correct = "" == corr
+            for (i in 1..no)
+                repository.persistAnswer(question, correct)
+        }
+
+        When("^level of knowledge is calculated$") {
+            levelOfKnowledge = progressEvaluator.evaluate(noun, questionType)
+        }
+
+        Then("^the level of knowledge is ([^:]+): (.+)$") { targetLevel: String, levelNewStr: String ->
+            val levelNew = "yes" == levelNewStr
+            assertThat(levelOfKnowledge == LevelOfKnowledge.valueOf(targetLevel.replace(" ", "_").toUpperCase())).isEqualTo(levelNew)
+        }
+
+        Then("^the level of knowledge is ([^:]+)$") { level: String ->
+            assertThat(levelOfKnowledge == LevelOfKnowledge.valueOf(level.replace(" ", "_").toUpperCase())).isTrue()
         }
     }
 
@@ -109,12 +140,16 @@ class Steps : En {
 }
 
 class RepositoryDouble : Repository {
-    var persistedAnswers: Int = 0
+    var persistedAnswers: List<Pair<Question, Boolean>> = ArrayList()
     var staticNouns: List<Noun> = ArrayList()
 
     override fun getNouns(): List<Noun> = staticNouns
 
     override fun persistAnswer(question: Question, result: Boolean) {
-        persistedAnswers++
+        persistedAnswers += Pair(question, result)
+    }
+
+    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<Question, Boolean>> {
+        return persistedAnswers
     }
 }
