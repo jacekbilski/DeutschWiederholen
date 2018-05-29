@@ -1,5 +1,10 @@
 Feature: Core functionalities
 
+  Scenario: Every answer the user is giving is recorded
+    Given a question
+    When the user answers the question
+    Then the question with correctness of answer are recorded
+
   Scenario Outline: If a question type for a specific word was asked at most 10 times, the word is new
     Given a word
     And a question type
@@ -23,9 +28,9 @@ Feature: Core functionalities
     And <incorrNo> incorrect answers
     And then <corrNo> correct answers
     When level of knowledge is calculated
-    Then the level of knowledge is needs practice: <nnedsPractice?>
+    Then the level of knowledge is needs practice: <needsPractice?>
     Examples:
-      | incorrNo | corrNo | nnedsPractice? |
+      | incorrNo | corrNo | needsPractice? |
       | 0        | 19     | no             |
       | 1        | 10     | yes            |
       | 1        | 19     | yes            |

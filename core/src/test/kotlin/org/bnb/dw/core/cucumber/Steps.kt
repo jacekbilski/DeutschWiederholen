@@ -21,7 +21,7 @@ class Steps : En {
     private lateinit var question: Question
     private lateinit var questionType: QuestionType
     private lateinit var levelOfKnowledge: LevelOfKnowledge
-    private var generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.NOUN, 0), Pair(QuestionType.TRANSLATION, 0))
+    private var generatedQuestions: List<Question> = mutableListOf()
 
     init {
         Given("^a noun (.+) with a gender (.+) and a translation (.+)$") { word: String, gender: String, translation: String ->
@@ -88,12 +88,15 @@ class Steps : En {
             repo.staticNouns = listOf(SOME_NOUN)
             quiz = Quiz(repo, settings)
             for (i in 1..20000) {
-                val question = quiz.fetchQuestion()
-                generatedQuestionTypes[question.type] = generatedQuestionTypes.getValue(question.type) + 1
+                generatedQuestions += quiz.fetchQuestion()
             }
         }
 
         Then("^probability of getting (.+) question is (.+) percent$") { type: String, probability: Double ->
+            val generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.NOUN, 0), Pair(QuestionType.TRANSLATION, 0))
+            for (question in generatedQuestions) {
+                generatedQuestionTypes[question.type] = generatedQuestionTypes.getValue(question.type) + 1
+            }
             val totalQuestions = generatedQuestionTypes.values.sum()
             val thisTypeQuestions = generatedQuestionTypes.getOrDefault(QuestionType.valueOf(type.toUpperCase()), -1)
             val expected = 100.0 * thisTypeQuestions / totalQuestions

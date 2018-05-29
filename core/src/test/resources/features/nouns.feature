@@ -29,11 +29,6 @@ Feature: Nouns
       | Flut     | feminine | powódź                  | powódź   | true    |
       | Umgebung | feminine | środowisko, environment | samochód | false   |
 
-  Scenario: Every answer the user is giving is recorded
-    Given a question
-    When the user answers the question
-    Then the question with correctness of answer are recorded
-
   Scenario Outline: Settings affect probability of getting a question of a specific type
     Given weight for gender questions of <gender_weight>
     And weight for noun questions of <noun_weight>
