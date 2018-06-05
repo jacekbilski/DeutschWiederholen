@@ -12,7 +12,7 @@ class Steps : En {
     private var result: Boolean = false
 
     private val repository = RepositoryDouble()
-    private var settings = Settings(1, 1, 1)
+    private var settings = Settings()
     private var quiz = Quiz(repository, settings)
     private val progressEvaluator = ProgressEvaluator(repository)
 
@@ -72,15 +72,15 @@ class Steps : En {
         }
 
         Given("^weight for gender questions of (.+)$") { weight: Int ->
-            settings = Settings(weight, settings.nounWeight, settings.translationWeight)
+            settings.genderWeight = weight
         }
 
         Given("^weight for noun questions of (.+)$") { weight: Int ->
-            settings = Settings(settings.genderWeight, weight, settings.translationWeight)
+            settings.nounWeight = weight
         }
 
         Given("^weight for translation questions of (.+)$") { weight: Int ->
-            settings = Settings(settings.genderWeight, settings.nounWeight, weight)
+            settings.translationWeight = weight
         }
 
         When("^questions are being generated$") {

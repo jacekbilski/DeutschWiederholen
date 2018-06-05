@@ -52,7 +52,14 @@ class QuestionActivity : AppCompatActivity() {
     }
 
     private fun translateSettings(preferences: SharedPreferences): Settings {
-        return Settings(preferences.getInt("pref_nouns_gender_weight", -1), preferences.getInt("pref_nouns_gender_weight", -1), preferences.getInt("pref_nouns_gender_weight", -1))
+        val settings = Settings()
+        if (preferences.contains(getString(R.string.pref_nouns_gender_weight)))
+            settings.genderWeight = preferences.getInt(getString(R.string.pref_nouns_gender_weight), -1)
+        if (preferences.contains(getString(R.string.pref_nouns_noun_weight)))
+            settings.nounWeight = preferences.getInt(getString(R.string.pref_nouns_noun_weight), -1)
+        if (preferences.contains(getString(R.string.pref_nouns_translation_weight)))
+            settings.translationWeight = preferences.getInt(getString(R.string.pref_nouns_translation_weight), -1)
+        return settings
     }
 
     private fun prepareView() {

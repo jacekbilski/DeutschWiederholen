@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_nouns_gender_weight">pref_nouns_gender_weight</string>
+    <string name="pref_nouns_noun_weight">pref_nouns_noun_weight</string>
+    <string name="pref_nouns_translation_weight">pref_nouns_translation_weight</string>
+</resources>
