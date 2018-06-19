@@ -33,7 +33,8 @@ class Steps : En {
             val goodChoice = Choice("", noun.gender)
             val currentChoice = Choice("", Gender.valueOf(choice.toUpperCase()))
             val choices = listOf(goodChoice, currentChoice)
-            val question = Question(QuestionType.GENDER, noun, choices)
+            val prototype = QuestionPrototype(QuestionType.GENDER, noun)
+            val question = Question(prototype, choices)
             result = quiz.verify(question, currentChoice)
         }
 
@@ -41,7 +42,8 @@ class Steps : En {
             val goodChoice = Choice("", noun)
             val currentChoice = Choice("", nouns[choice] ?: WRONG_NOUN)
             val choices = listOf(goodChoice, currentChoice)
-            val question = Question(QuestionType.NOUN, noun, choices)
+            val prototype = QuestionPrototype(QuestionType.NOUN, noun)
+            val question = Question(prototype, choices)
             result = quiz.verify(question, currentChoice)
         }
 
@@ -49,7 +51,8 @@ class Steps : En {
             val goodChoice = Choice("", noun)
             val currentChoice = Choice("", findNounByTranslation(choice) ?: WRONG_NOUN)
             val choices = listOf(goodChoice, currentChoice)
-            val question = Question(QuestionType.TRANSLATION, noun, choices)
+            val prototype = QuestionPrototype(QuestionType.TRANSLATION, noun)
+            val question = Question(prototype, choices)
             result = quiz.verify(question, currentChoice)
         }
 
@@ -59,7 +62,8 @@ class Steps : En {
 
         Given("^a question$") {
             noun = Noun(Random().nextLong(), "a", Gender.FEMININE, "")
-            question = Question(QuestionType.NOUN, noun, ArrayList())
+            val prototype = QuestionPrototype(QuestionType.NOUN, noun)
+            question = Question(prototype, ArrayList())
         }
 
         When("^the user answers the question$") {
@@ -95,7 +99,7 @@ class Steps : En {
         Then("^probability of getting (.+) question is (.+) percent$") { type: String, probability: Double ->
             val generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.NOUN, 0), Pair(QuestionType.TRANSLATION, 0))
             for (question in generatedQuestions) {
-                generatedQuestionTypes[question.type] = generatedQuestionTypes.getValue(question.type) + 1
+                generatedQuestionTypes[question.prototype.type] = generatedQuestionTypes.getValue(question.prototype.type) + 1
             }
             val totalQuestions = generatedQuestionTypes.values.sum()
             val thisTypeQuestions = generatedQuestionTypes.getOrDefault(QuestionType.valueOf(type.toUpperCase()), -1)
@@ -112,10 +116,11 @@ class Steps : En {
         }
 
         Given("^t?h?e?n? ?(\\d+) (i?n?)correct answers$") { no: Int, corr: String ->
-            question = Question(questionType, noun, emptyList())
+            val prototype = QuestionPrototype(questionType, noun)
+            question = Question(prototype, emptyList())
             val correct = "" == corr
             for (i in 1..no)
-                repository.persistAnswer(question, correct)
+                repository.persistAnswer(prototype, correct)
         }
 
         When("^level of knowledge is calculated$") {
@@ -143,16 +148,16 @@ class Steps : En {
 }
 
 class RepositoryDouble : Repository {
-    var persistedAnswers: List<Pair<Question, Boolean>> = ArrayList()
+    var persistedAnswers: List<Pair<QuestionPrototype, Boolean>> = ArrayList()
     var staticNouns: List<Noun> = ArrayList()
 
     override fun getNouns(): List<Noun> = staticNouns
 
-    override fun persistAnswer(question: Question, result: Boolean) {
+    override fun persistAnswer(question: QuestionPrototype, result: Boolean) {
         persistedAnswers += Pair(question, result)
     }
 
-    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<Question, Boolean>> {
+    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<QuestionPrototype, Boolean>> {
         return persistedAnswers
     }
 }

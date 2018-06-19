@@ -1,12 +1,12 @@
 package org.bnb.dw.core
 
-class Question(val type: QuestionType, val noun: Noun, val choices: List<Choice>) {
+class Question(val prototype: QuestionPrototype, val choices: List<Choice>) {
 
     fun text(): String {
-        return when (type) {
-            QuestionType.GENDER -> noun.word
-            QuestionType.NOUN -> noun.translation
-            QuestionType.TRANSLATION -> noun.gender.article + " " + noun.word
+        return when (prototype.type) {
+            QuestionType.GENDER -> prototype.noun.word
+            QuestionType.NOUN -> prototype.noun.translation
+            QuestionType.TRANSLATION -> prototype.noun.gender.article + " " + prototype.noun.word
         }
     }
 }

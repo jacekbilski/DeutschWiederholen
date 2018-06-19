@@ -14,35 +14,29 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
             override fun next(): Question {
                 val nouns = repo.getNouns()
                 val noun = nouns[random.nextInt(nouns.size)]
-                return when (random.nextInt(settings.genderWeight + settings.nounWeight + settings.translationWeight) + 1) {
-                    in 1..settings.genderWeight -> prepareQuestion(QuestionType.GENDER, noun)
-                    in settings.genderWeight + 1..settings.genderWeight + settings.nounWeight -> prepareQuestion(QuestionType.NOUN, noun)
-                    in settings.genderWeight + settings.nounWeight + 1..settings.genderWeight + settings.nounWeight + settings.translationWeight -> prepareQuestion(QuestionType.TRANSLATION, noun)
+                val questionType = when (random.nextInt(settings.genderWeight + settings.nounWeight + settings.translationWeight) + 1) {
+                    in 1..settings.genderWeight -> QuestionType.GENDER
+                    in settings.genderWeight + 1..settings.genderWeight + settings.nounWeight -> QuestionType.NOUN
+                    in settings.genderWeight + settings.nounWeight + 1..settings.genderWeight + settings.nounWeight + settings.translationWeight -> QuestionType.TRANSLATION
                     else -> throw IllegalStateException("when expression not exhaustive")
                 }
+                val prototype = QuestionPrototype(questionType, noun)
+                return prepareQuestion(prototype)
             }
         }
     }
 
-    private fun prepareQuestion(type: QuestionType, noun: Noun): Question {
-        return when (type) {
+    private fun prepareQuestion(prototype: QuestionPrototype): Question {
+        return when (prototype.type) {
             QuestionType.GENDER -> {
                 val genderChoices = listOf(
                         Choice("der", Gender.MASCULINE),
                         Choice("die", Gender.FEMININE),
                         Choice("das", Gender.NEUTER))
-                Question(QuestionType.GENDER, noun, genderChoices.shuffled())
+                Question(prototype, genderChoices.shuffled())
             }
-            QuestionType.NOUN ->
-                Question(
-                        QuestionType.NOUN,
-                        noun,
-                        proposeAnswers(noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
-            QuestionType.TRANSLATION ->
-                Question(
-                        QuestionType.TRANSLATION,
-                        noun,
-                        proposeAnswers(noun).map { nn -> Choice(nn.translation, nn) })
+            QuestionType.NOUN -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
+            QuestionType.TRANSLATION -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.translation, nn) })
         }
     }
 
@@ -55,10 +49,11 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
     }
 
     fun verify(question: Question, answer: Choice): Boolean {
-        val result = when (question.type) {
-            QuestionType.GENDER -> question.noun.gender == answer.value
-            QuestionType.NOUN -> question.noun == answer.value
-            QuestionType.TRANSLATION -> question.noun == answer.value
+        val prototype = question.prototype
+        val result = when (prototype.type) {
+            QuestionType.GENDER -> prototype.noun.gender == answer.value
+            QuestionType.NOUN -> prototype.noun == answer.value
+            QuestionType.TRANSLATION -> prototype.noun == answer.value
         }
         repo.persistAnswer(question, result)
         return result

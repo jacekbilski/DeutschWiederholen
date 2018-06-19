@@ -10,7 +10,7 @@ import java.util.*
 
 class FilesRepository(private val basePath: String): Repository {
     private lateinit var nouns: List<Noun>
-    private lateinit var answers: List<Pair<Question, Boolean>>
+    private lateinit var answers: List<Pair<QuestionPrototype, Boolean>>
 
     override fun getNouns(): List<Noun> {
         if (!this::nouns.isInitialized)
@@ -28,7 +28,7 @@ class FilesRepository(private val basePath: String): Repository {
         return csvReader.readAll().mapIndexed { index, line -> Noun(index.toLong(), line[0], Gender.of(line[1]), line[2]) }
     }
 
-    override fun persistAnswer(question: Question, result: Boolean) {
+    override fun persistAnswer(question: QuestionPrototype, result: Boolean) {
         val file = File(basePath, "answers.csv")
         val writer = FileWriter(file, true)
         val timestamp = Date().time
@@ -39,20 +39,20 @@ class FilesRepository(private val basePath: String): Repository {
         answers += Pair(question, result)
     }
 
-    private fun loadAnswers(): List<Pair<Question, Boolean>> {
+    private fun loadAnswers(): List<Pair<QuestionPrototype, Boolean>> {
         val csvReader = CSVReaderBuilder(FileReader(File(basePath, "answers.csv")))
                 .withCSVParser(CSVParserBuilder()
                         .withSeparator(',')
                         .build())
                 .build()
-        return csvReader.readAll().map { line -> Pair(Question(QuestionType.valueOf(line[1]), getNoun(line[2].toLong()),emptyList()), "true" == line[4]) }
+        return csvReader.readAll().map { line -> Pair(QuestionPrototype(QuestionType.valueOf(line[1]), getNoun(line[2].toLong())), "true" == line[4]) }
     }
 
     private fun getNoun(id: Long): Noun {
         return nouns.first { n -> n.id == id }
     }
 
-    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<Question, Boolean>> {
+    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<QuestionPrototype, Boolean>> {
         return answers.filter { p -> p.first.type == questionType && p.first.noun == noun }
     }
 }
