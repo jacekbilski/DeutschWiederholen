@@ -19,7 +19,7 @@
             android:id="@+id/gridLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4">
+            android:layout_weight="8">
 
             <TextView
                 android:id="@+id/questionText"
@@ -27,7 +27,9 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:scaleX="1.1"
+                android:scaleY="1.1" />
 
         </GridLayout>
 
@@ -35,16 +37,18 @@
             android:id="@+id/answersRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="4">
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_weight="8"
+            android:scaleX="1.1"
+            android:scaleY="1.1">
         </RadioGroup>
 
         <Button
             android:id="@+id/checkButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:text="@string/check" />
 
     </LinearLayout>
