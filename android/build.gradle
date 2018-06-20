@@ -31,11 +31,6 @@ android {
     }
 }
 
-repositories {
-    mavenLocal()
-    google()
-}
-
 dependencies {
     implementation project(path: ":core")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -47,7 +42,7 @@ dependencies {
         exclude group: "com.android.support", module: "support-annotations"
     })
     testImplementation "junit:junit:4.12"
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:2.2.2", {
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2", {
         exclude group: "com.android.support", module: "support-annotations"
     })
 }

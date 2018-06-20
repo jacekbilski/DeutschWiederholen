@@ -55,7 +55,7 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
             QuestionType.NOUN -> prototype.noun == answer.value
             QuestionType.TRANSLATION -> prototype.noun == answer.value
         }
-        repo.persistAnswer(question, result)
+        repo.persistAnswer(prototype, result)
         return result
     }
 }

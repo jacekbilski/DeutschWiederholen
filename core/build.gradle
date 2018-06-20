@@ -3,7 +3,6 @@ ext {
     junit_version = "5.1.1"
 }
 
-apply plugin: "java"
 apply plugin: "kotlin"
 
 group = "org.bnb.dw"
