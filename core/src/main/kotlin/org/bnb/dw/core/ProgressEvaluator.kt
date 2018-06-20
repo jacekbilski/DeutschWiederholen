@@ -1,6 +1,6 @@
 package org.bnb.dw.core
 
-class ProgressEvaluator(val repository: Repository) {
+class ProgressEvaluator(private val repository: Repository) {
     fun evaluate(noun: Noun, questionType: QuestionType): LevelOfKnowledge {
         val answers = repository.getAnswers(noun, questionType).takeLast(20)
         if (answers.size <= 10)

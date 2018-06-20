@@ -2,26 +2,31 @@ package org.bnb.dw.core
 
 import java.util.*
 
-class Quiz(private val repo: Repository, private val settings: Settings) {
+class Quiz(private val repository: Repository, private val settings: Settings) {
 
     private val random: Random = Random()
+    private val questionPrototypes: List<QuestionPrototype>
+    private val questionTypeSelectionStrategy: QuestionSelectionStrategy
     private val questions: Iterator<Question>
 
     init {
+        questionTypeSelectionStrategy = QuestionTypeSelectionStrategy(settings)
+        questionPrototypes = repository.getNouns()
+                .flatMap { noun ->
+                    listOf(QuestionPrototype(QuestionType.GENDER, noun),
+                            QuestionPrototype(QuestionType.NOUN, noun),
+                            QuestionPrototype(QuestionType.TRANSLATION, noun))
+                }
+
         questions = object : Iterator<Question> {
             override fun hasNext(): Boolean = true
 
             override fun next(): Question {
-                val nouns = repo.getNouns()
-                val noun = nouns[random.nextInt(nouns.size)]
-                val questionType = when (random.nextInt(settings.genderWeight + settings.nounWeight + settings.translationWeight) + 1) {
-                    in 1..settings.genderWeight -> QuestionType.GENDER
-                    in settings.genderWeight + 1..settings.genderWeight + settings.nounWeight -> QuestionType.NOUN
-                    in settings.genderWeight + settings.nounWeight + 1..settings.genderWeight + settings.nounWeight + settings.translationWeight -> QuestionType.TRANSLATION
-                    else -> throw IllegalStateException("when expression not exhaustive")
-                }
-                val prototype = QuestionPrototype(questionType, noun)
-                return prepareQuestion(prototype)
+                var candidates: List<QuestionPrototype>
+                do {
+                    candidates = questionPrototypes.filter(questionTypeSelectionStrategy.select())
+                } while (candidates.isEmpty())
+                return prepareQuestion(candidates[random.nextInt(candidates.size)])
             }
         }
     }
@@ -41,7 +46,7 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
     }
 
     private fun proposeAnswers(noun: Noun): List<Noun> {
-        return repo.getNouns().minus(noun).shuffled().take(4).plus(noun).shuffled()
+        return repository.getNouns().minus(noun).shuffled().take(4).plus(noun).shuffled()
     }
 
     fun fetchQuestion(): Question {
@@ -55,7 +60,7 @@ class Quiz(private val repo: Repository, private val settings: Settings) {
             QuestionType.NOUN -> prototype.noun == answer.value
             QuestionType.TRANSLATION -> prototype.noun == answer.value
         }
-        repo.persistAnswer(prototype, result)
+        repository.persistAnswer(prototype, result)
         return result
     }
 }
