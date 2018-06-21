@@ -18,7 +18,7 @@ class Steps : En {
 
     private var nouns: MutableMap<String, Noun> = mutableMapOf()
     private lateinit var noun: Noun
-    private lateinit var question: Question
+    private lateinit var questionPrototype: QuestionPrototype
     private lateinit var questionType: QuestionType
     private lateinit var levelOfKnowledge: LevelOfKnowledge
     private var generatedQuestions: List<Question> = mutableListOf()
@@ -30,30 +30,21 @@ class Steps : En {
         }
 
         When("^the user chooses gender (.+)$") { choice: String ->
-            val goodChoice = Choice("", noun.gender)
             val currentChoice = Choice("", Gender.valueOf(choice.toUpperCase()))
-            val choices = listOf(goodChoice, currentChoice)
             val prototype = QuestionPrototype(QuestionType.GENDER, noun)
-            val question = Question(prototype, choices)
-            result = quiz.verify(question, currentChoice)
+            result = quiz.verify(prototype, currentChoice)
         }
 
         When("^the user chooses noun (.+)$") { choice: String ->
-            val goodChoice = Choice("", noun)
             val currentChoice = Choice("", nouns[choice] ?: WRONG_NOUN)
-            val choices = listOf(goodChoice, currentChoice)
             val prototype = QuestionPrototype(QuestionType.NOUN, noun)
-            val question = Question(prototype, choices)
-            result = quiz.verify(question, currentChoice)
+            result = quiz.verify(prototype, currentChoice)
         }
 
         When("^the user chooses translation (.+)$") { choice: String ->
-            val goodChoice = Choice("", noun)
             val currentChoice = Choice("", findNounByTranslation(choice) ?: WRONG_NOUN)
-            val choices = listOf(goodChoice, currentChoice)
             val prototype = QuestionPrototype(QuestionType.TRANSLATION, noun)
-            val question = Question(prototype, choices)
-            result = quiz.verify(question, currentChoice)
+            result = quiz.verify(prototype, currentChoice)
         }
 
         Then("^the answer was correct: (\\w+)$") { correct: Boolean ->
@@ -62,13 +53,12 @@ class Steps : En {
 
         Given("^a question$") {
             noun = Noun(Random().nextLong(), "a", Gender.FEMININE, "")
-            val prototype = QuestionPrototype(QuestionType.NOUN, noun)
-            question = Question(prototype, ArrayList())
+            questionPrototype = QuestionPrototype(QuestionType.NOUN, noun)
         }
 
         When("^the user answers the question$") {
             val currentChoice = Choice("", noun)
-            result = quiz.verify(question, currentChoice)
+            result = quiz.verify(questionPrototype, currentChoice)
         }
 
         Then("^the question with correctness of answer are recorded$") {
@@ -116,15 +106,14 @@ class Steps : En {
         }
 
         Given("^t?h?e?n? ?(\\d+) (i?n?)correct answers$") { no: Int, corr: String ->
-            val prototype = QuestionPrototype(questionType, noun)
-            question = Question(prototype, emptyList())
+            questionPrototype = QuestionPrototype(questionType, noun)
             val correct = "" == corr
             for (i in 1..no)
-                repository.persistAnswer(prototype, correct)
+                repository.persistAnswer(questionPrototype, correct)
         }
 
         When("^level of knowledge is calculated$") {
-            levelOfKnowledge = progressEvaluator.evaluate(noun, questionType)
+            levelOfKnowledge = progressEvaluator.evaluate(questionPrototype)
         }
 
         Then("^the level of knowledge is ([^:]+): (.+)$") { targetLevel: String, levelNewStr: String ->
@@ -157,7 +146,7 @@ class RepositoryDouble : Repository {
         persistedAnswers += Pair(question, result)
     }
 
-    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<QuestionPrototype, Boolean>> {
-        return persistedAnswers
+    override fun getAnswers(questionPrototype: QuestionPrototype): List<Pair<QuestionPrototype, Boolean>> {
+        return persistedAnswers.filter { a -> a.first == questionPrototype }
     }
 }

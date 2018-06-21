@@ -52,9 +52,9 @@ class FilesRepository(private val basePath: String): Repository {
         return nouns.first { n -> n.id == id }
     }
 
-    override fun getAnswers(noun: Noun, questionType: QuestionType): List<Pair<QuestionPrototype, Boolean>> {
+    override fun getAnswers(questionPrototype: QuestionPrototype): List<Pair<QuestionPrototype, Boolean>> {
         if (!this::answers.isInitialized)
             answers = loadAnswers()
-        return answers.filter { p -> p.first.type == questionType && p.first.noun == noun }
+        return answers.filter { p -> p.first == questionPrototype }
     }
 }

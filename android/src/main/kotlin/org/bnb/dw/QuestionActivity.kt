@@ -91,7 +91,7 @@ class QuestionActivity : AppCompatActivity() {
     private fun check(question: Question) {
         val selectedChoice = selectedChoice
         if (selectedChoice != null) {
-            val result = quiz!!.verify(question, selectedChoice.tag as Choice)
+            val result = quiz!!.verify(question.prototype, selectedChoice.tag as Choice)
             informUser(result)
             if (result)
                 nextQuestion()

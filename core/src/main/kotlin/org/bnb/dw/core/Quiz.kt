@@ -53,8 +53,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
         return questions.next()
     }
 
-    fun verify(question: Question, answer: Choice): Boolean {
-        val prototype = question.prototype
+    fun verify(prototype: QuestionPrototype, answer: Choice): Boolean {
         val result = when (prototype.type) {
             QuestionType.GENDER -> prototype.noun.gender == answer.value
             QuestionType.NOUN -> prototype.noun == answer.value
