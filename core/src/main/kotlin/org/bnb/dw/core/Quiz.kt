@@ -7,10 +7,12 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
     private val random: Random = Random()
     private val questionPrototypes: List<QuestionPrototype>
     private val questionTypeSelectionStrategy: QuestionSelectionStrategy
+    private val levelOfKnowledgeSelectionStrategy: QuestionSelectionStrategy
     private val questions: Iterator<Question>
 
     init {
         questionTypeSelectionStrategy = QuestionTypeSelectionStrategy(settings)
+        levelOfKnowledgeSelectionStrategy = LevelOfKnowledgeSelectionStrategy(settings, repository)
         questionPrototypes = repository.getNouns()
                 .flatMap { noun ->
                     listOf(QuestionPrototype(QuestionType.GENDER, noun),
@@ -24,7 +26,9 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
             override fun next(): Question {
                 var candidates: List<QuestionPrototype>
                 do {
-                    candidates = questionPrototypes.filter(questionTypeSelectionStrategy.select())
+                    candidates = questionPrototypes
+                            .filter(questionTypeSelectionStrategy.select())
+                            .filter(levelOfKnowledgeSelectionStrategy.select())
                 } while (candidates.isEmpty())
                 return prepareQuestion(candidates[random.nextInt(candidates.size)])
             }

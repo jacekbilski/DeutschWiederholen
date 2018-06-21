@@ -86,15 +86,17 @@ class Steps : En {
             when (level) {
                 "new" -> {
                     settings.newTermsWeight = weight
-                    generateAnswers(prototype, 1)
+                    generateAnswers(prototype, 1, true)
                 }
                 "needs practice" -> {
                     settings.needsPracticeTermsWeight = weight
-                    generateAnswers(prototype, 15)
+                    generateAnswers(prototype, 10, true)
+                    generateAnswers(prototype, 1, false)
+                    generateAnswers(prototype, 5, true)
                 }
                 "learned" -> {
                     settings.learnedTermsWeight = weight
-                    generateAnswers(prototype, 30)
+                    generateAnswers(prototype, 30, true)
                 }
             }
         }
@@ -120,7 +122,7 @@ class Steps : En {
         Then("^probability of getting question for (.*) is (.*) percent$") { level: String, probability: Double ->
             val generatedQuestionKnowledgeLevels: MutableMap<LevelOfKnowledge, Int> = mutableMapOf(Pair(LevelOfKnowledge.NEW, 0), Pair(LevelOfKnowledge.NEEDS_PRACTICE, 0), Pair(LevelOfKnowledge.LEARNED, 0))
             for (question in generatedQuestions) {
-                levelOfKnowledge = progressEvaluator.evaluate(question.prototype.noun, question.prototype.type)
+                levelOfKnowledge = progressEvaluator.evaluate(question.prototype)
                 generatedQuestionKnowledgeLevels[levelOfKnowledge] = generatedQuestionKnowledgeLevels.getValue(levelOfKnowledge) + 1
             }
             val totalQuestions = generatedQuestionKnowledgeLevels.values.sum()
@@ -169,9 +171,9 @@ class Steps : En {
         return noun
     }
 
-    private fun generateAnswers(question: QuestionPrototype, number: Int) {
+    private fun generateAnswers(question: QuestionPrototype, number: Int, correct: Boolean) {
         for (i in 1..number) {
-            repository.persistAnswer(question, true)
+            repository.persistAnswer(question, correct)
         }
     }
 
