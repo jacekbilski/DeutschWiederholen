@@ -56,3 +56,17 @@ Feature: Core functionalities
       | 5   | correct | 1   | incorrect | 19  | correct   | needs practice |
       | 0   | correct | 5   | incorrect | 22  | correct   | learned        |
       | 0   | correct | 0   | incorrect | 20  | correct   | learned        |
+
+  Scenario Outline: Settings affect probability of getting a question for a specific knowledge level
+    Given weight for questions for <level 1> is <weight 1>
+    And weight for questions for <level 2> is <weight 2>
+    And weight for questions for <level 3> is <weight 3>
+    When questions are being generated
+    Then probability of getting question for <level 1> is <level1_probability> percent
+    And probability of getting question for <level 2> is <level2_probability> percent
+    And probability of getting question for <level 3> is <level3_probability> percent
+    Examples:
+      | level 1 | weight 1 | level 2        | weight 2 | level 3 | weight 3 | level1_probability | level2_probability | level3_probability |
+      | new     | 1        | needs practice | 0        | learned | 0        | 100                | 0                  | 0                  |
+      | new     | 0        | needs practice | 3        | learned | 0        | 0                  | 100                | 0                  |
+      | new     | 30       | needs practice | 60       | learned | 10       | 30                 | 60                 | 10                 |

@@ -77,10 +77,30 @@ class Steps : En {
             settings.translationWeight = weight
         }
 
+        Given("^weight for questions for (.*) is (.*)$") { level: String, weight: Int ->
+            val noun = generateNoun()
+            repository.staticNouns += noun
+            settings.translationWeight = 0
+            settings.genderWeight = 0
+            val prototype = QuestionPrototype(QuestionType.NOUN, noun)
+            when (level) {
+                "new" -> {
+                    settings.newTermsWeight = weight
+                    generateAnswers(prototype, 1)
+                }
+                "needs practice" -> {
+                    settings.needsPracticeTermsWeight = weight
+                    generateAnswers(prototype, 15)
+                }
+                "learned" -> {
+                    settings.learnedTermsWeight = weight
+                    generateAnswers(prototype, 30)
+                }
+            }
+        }
+
         When("^questions are being generated$") {
-            val repo = RepositoryDouble()
-            repo.staticNouns = listOf(SOME_NOUN)
-            quiz = Quiz(repo, settings)
+            quiz = Quiz(repository, settings)
             for (i in 1..20000) {
                 generatedQuestions += quiz.fetchQuestion()
             }
@@ -97,8 +117,21 @@ class Steps : En {
             assertThat(probability).isCloseTo(expected, Percentage.withPercentage(5.0))
         }
 
+        Then("^probability of getting question for (.*) is (.*) percent$") { level: String, probability: Double ->
+            val generatedQuestionKnowledgeLevels: MutableMap<LevelOfKnowledge, Int> = mutableMapOf(Pair(LevelOfKnowledge.NEW, 0), Pair(LevelOfKnowledge.NEEDS_PRACTICE, 0), Pair(LevelOfKnowledge.LEARNED, 0))
+            for (question in generatedQuestions) {
+                levelOfKnowledge = progressEvaluator.evaluate(question.prototype.noun, question.prototype.type)
+                generatedQuestionKnowledgeLevels[levelOfKnowledge] = generatedQuestionKnowledgeLevels.getValue(levelOfKnowledge) + 1
+            }
+            val totalQuestions = generatedQuestionKnowledgeLevels.values.sum()
+            val thisLevelQuestions = generatedQuestionKnowledgeLevels.getOrDefault(LevelOfKnowledge.valueOf(level.replace(" ", "_").toUpperCase()), -1)
+            val expected = 100.0 * thisLevelQuestions / totalQuestions
+            assertThat(probability).isCloseTo(expected, Percentage.withPercentage(5.0))
+        }
+
         Given("^a word$") {
             noun = SOME_NOUN
+            repository.staticNouns += noun
         }
 
         Given("^a question type") {
@@ -128,6 +161,18 @@ class Steps : En {
 
     private fun findNounByTranslation(translation: String): Noun? {
         return nouns.entries.find { e -> e.value.translation == translation }?.value
+    }
+
+    private fun generateNoun(): Noun {
+        val noun = Noun(Random().nextLong(), UUID.randomUUID().toString(), Gender.MASCULINE, UUID.randomUUID().toString())
+        nouns[noun.word] = noun
+        return noun
+    }
+
+    private fun generateAnswers(question: QuestionPrototype, number: Int) {
+        for (i in 1..number) {
+            repository.persistAnswer(question, true)
+        }
     }
 
     companion object {

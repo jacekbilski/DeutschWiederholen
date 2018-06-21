@@ -30,6 +30,7 @@ Feature: Nouns
       | Umgebung | feminine | środowisko, environment | samochód | false   |
 
   Scenario Outline: Settings affect probability of getting a question of a specific type
+    Given a word
     Given weight for gender questions of <gender_weight>
     And weight for noun questions of <noun_weight>
     And weight for translation questions of <translation_weight>
