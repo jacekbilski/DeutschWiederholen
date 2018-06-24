@@ -40,12 +40,17 @@ class FilesRepository(private val basePath: String): Repository {
     }
 
     private fun loadAnswers(): List<Pair<QuestionPrototype, Boolean>> {
-        val csvReader = CSVReaderBuilder(FileReader(File(basePath, "answers.csv")))
-                .withCSVParser(CSVParserBuilder()
-                        .withSeparator(',')
-                        .build())
-                .build()
-        return csvReader.readAll().map { line -> Pair(QuestionPrototype(QuestionType.valueOf(line[1]), getNoun(line[2].toLong())), "true" == line[4]) }
+        val file = File(basePath, "answers.csv")
+        if (file.exists()) {
+            val csvReader = CSVReaderBuilder(FileReader(file))
+                    .withCSVParser(CSVParserBuilder()
+                            .withSeparator(',')
+                            .build())
+                    .build()
+            return csvReader.readAll().map { line -> Pair(QuestionPrototype(QuestionType.valueOf(line[1]), getNoun(line[2].toLong())), "true" == line[4]) }
+        } else {
+            return emptyList()
+        }
     }
 
     private fun getNoun(id: Long): Noun {
