@@ -1,27 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.preference.PreferenceCategory
-        android:title="Nouns"
-        android:key="pref_nouns">
+            android:title="Nouns"
+            android:key="pref_nouns">
         <android.support.v7.preference.SeekBarPreference
-            android:title="Gender weight"
-            android:key="@string/pref_nouns_gender_weight"
-            android:max="100"
-            android:defaultValue="30" />
+                android:title="Gender weight"
+                android:key="@string/pref_nouns_gender_weight"
+                android:max="100"
+                android:defaultValue="30"/>
         <android.support.v7.preference.SeekBarPreference
-            android:title="Noun weight"
-            android:key="@string/pref_nouns_noun_weight"
-            android:max="100"
-            android:defaultValue="30" />
+                android:title="Noun weight"
+                android:key="@string/pref_nouns_noun_weight"
+                android:max="100"
+                android:defaultValue="30"/>
         <android.support.v7.preference.SeekBarPreference
                 android:title="Translation weight"
                 android:key="@string/pref_nouns_translation_weight"
                 android:max="100"
-                android:defaultValue="30" />
+                android:defaultValue="30"/>
         <android.support.v7.preference.SeekBarPreference
                 android:title="Plural ending weight"
-                android:key="@string/pref_nouns_plural_ending_weight"
+                android:key="@string/pref_nouns_pluralEnding_weight"
                 android:max="100"
-                android:defaultValue="10" />
+                android:defaultValue="10"/>
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+            android:title="Levels of knowledge"
+            android:key="pref_levels_of_knowledge">
+        <android.support.v7.preference.SeekBarPreference
+                android:title="New"
+                android:key="@string/pref_levelOfKnowledge_new_weight"
+                android:max="100"
+                android:defaultValue="40"/>
+        <android.support.v7.preference.SeekBarPreference
+                android:title="Needs practice"
+                android:key="@string/pref_levelOfKnowledge_needsPractice_weight"
+                android:max="100"
+                android:defaultValue="50"/>
+        <android.support.v7.preference.SeekBarPreference
+                android:title="Learned"
+                android:key="@string/pref_levelOfKnowledge_learned_weight"
+                android:max="100"
+                android:defaultValue="10"/>
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

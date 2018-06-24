@@ -3,5 +3,8 @@
     <string name="pref_nouns_gender_weight">pref_nouns_gender_weight</string>
     <string name="pref_nouns_noun_weight">pref_nouns_noun_weight</string>
     <string name="pref_nouns_translation_weight">pref_nouns_translation_weight</string>
-    <string name="pref_nouns_plural_ending_weight">pref_nouns_plural_ending_weight</string>
+    <string name="pref_nouns_pluralEnding_weight">pref_nouns_pluralEnding_weight</string>
+    <string name="pref_levelOfKnowledge_new_weight">pref_levelOfKnowledge_new_weight</string>
+    <string name="pref_levelOfKnowledge_needsPractice_weight">pref_levelOfKnowledge_needsPractice_weight</string>
+    <string name="pref_levelOfKnowledge_learned_weight">pref_levelOfKnowledge_learned_weight</string>
 </resources>

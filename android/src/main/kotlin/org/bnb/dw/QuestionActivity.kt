@@ -59,6 +59,14 @@ class QuestionActivity : AppCompatActivity() {
             settings.nounWeight = preferences.getInt(getString(R.string.pref_nouns_noun_weight), -1)
         if (preferences.contains(getString(R.string.pref_nouns_translation_weight)))
             settings.translationWeight = preferences.getInt(getString(R.string.pref_nouns_translation_weight), -1)
+        if (preferences.contains(getString(R.string.pref_nouns_pluralEnding_weight)))
+            settings.pluralEndingWeight = preferences.getInt(getString(R.string.pref_nouns_pluralEnding_weight), -1)
+        if (preferences.contains(getString(R.string.pref_levelOfKnowledge_new_weight)))
+            settings.newTermsWeight = preferences.getInt(getString(R.string.pref_levelOfKnowledge_new_weight), -1)
+        if (preferences.contains(getString(R.string.pref_levelOfKnowledge_needsPractice_weight)))
+            settings.needsPracticeTermsWeight = preferences.getInt(getString(R.string.pref_levelOfKnowledge_needsPractice_weight), -1)
+        if (preferences.contains(getString(R.string.pref_levelOfKnowledge_learned_weight)))
+            settings.learnedTermsWeight = preferences.getInt(getString(R.string.pref_levelOfKnowledge_learned_weight), -1)
         return settings
     }
 
