@@ -7,6 +7,7 @@ class Question(val prototype: QuestionPrototype, val choices: List<Choice>) {
             QuestionType.GENDER -> prototype.noun.word
             QuestionType.TERM_ITSELF -> prototype.noun.translation
             QuestionType.TRANSLATION -> prototype.noun.gender.article + " " + prototype.noun.word
+            QuestionType.PLURAL_ENDING -> prototype.noun.gender.article + " " + prototype.noun.word
         }
     }
 }

@@ -1,6 +1,6 @@
 package org.bnb.dw.core
 
-class Noun(val id: Long, val word: String, val gender: Gender, val translation: String) {
+class Noun(val id: Long, val word: String, val gender: Gender, val translation: String, val pluralEnding: String) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

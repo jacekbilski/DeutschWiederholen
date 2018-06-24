@@ -46,7 +46,12 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
             }
             QuestionType.TERM_ITSELF -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
             QuestionType.TRANSLATION -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.translation, nn) })
+            QuestionType.PLURAL_ENDING -> Question(prototype, proposePluralEndingAnswers(prototype.noun).map { ending -> Choice(ending, ending) })
         }
+    }
+
+    private fun proposePluralEndingAnswers(noun: Noun): List<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun proposeAnswers(noun: Noun): List<Noun> {
@@ -62,6 +67,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
             QuestionType.GENDER -> prototype.noun.gender == answer.value
             QuestionType.TERM_ITSELF -> prototype.noun == answer.value
             QuestionType.TRANSLATION -> prototype.noun == answer.value
+            QuestionType.PLURAL_ENDING -> prototype.noun.pluralEnding == answer.value
         }
         repository.persistAnswer(prototype, result)
         return result

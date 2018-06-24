@@ -2,6 +2,7 @@ package org.bnb.dw.core.cucumber
 
 import cucumber.api.java8.En
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.data.Offset
 import org.assertj.core.data.Percentage
 import org.bnb.dw.core.*
 import java.util.*
@@ -25,7 +26,13 @@ class Steps : En {
 
     init {
         Given("^a noun (.+) with a gender (.+) and a translation (.+)$") { word: String, gender: String, translation: String ->
-            noun = Noun(Random().nextLong(), word, Gender.valueOf(gender.toUpperCase()), translation)
+            noun = Noun(Random().nextLong(), word, Gender.valueOf(gender.toUpperCase()), translation, "")
+            nouns[word] = noun
+        }
+
+        Given("^a noun (.+) with a gender (.+), translation (.+) and a plural ending (.+)$") {
+            word: String, gender: String, translation: String, ending: String  ->
+            noun = Noun(Random().nextLong(), word, Gender.valueOf(gender.toUpperCase()), translation, ending)
             nouns[word] = noun
         }
 
@@ -47,12 +54,18 @@ class Steps : En {
             result = quiz.verify(prototype, currentChoice)
         }
 
+        When("^the user chooses plural ending (.+)$") { choice: String ->
+            val currentChoice = Choice("", choice)
+            val prototype = QuestionPrototype(QuestionType.PLURAL_ENDING, noun)
+            result = quiz.verify(prototype, currentChoice)
+        }
+
         Then("^the answer was correct: (\\w+)$") { correct: Boolean ->
             assertThat(result).isEqualTo(correct)
         }
 
         Given("^a question$") {
-            noun = Noun(Random().nextLong(), "a", Gender.FEMININE, "")
+            noun = Noun(Random().nextLong(), "a", Gender.FEMININE, "", "")
             questionPrototype = QuestionPrototype(QuestionType.TERM_ITSELF, noun)
         }
 
@@ -75,6 +88,10 @@ class Steps : En {
 
         Given("^weight for translation questions of (.+)$") { weight: Int ->
             settings.translationWeight = weight
+        }
+
+        Given("^weight for plural ending questions of (.+)$") { weight: Int ->
+            settings.pluralEndingWeight = weight
         }
 
         Given("^weight for questions for (.*) is (.*)$") { level: String, weight: Int ->
@@ -114,9 +131,9 @@ class Steps : En {
                 generatedQuestionTypes[question.prototype.type] = generatedQuestionTypes.getValue(question.prototype.type) + 1
             }
             val totalQuestions = generatedQuestionTypes.values.sum()
-            val thisTypeQuestions = generatedQuestionTypes.getOrDefault(QuestionType.valueOf(type.toUpperCase()), -1)
+            val thisTypeQuestions = generatedQuestionTypes.getOrDefault(QuestionType.valueOf(type.replace(" ", "_").toUpperCase()), -1)
             val expected = 100.0 * thisTypeQuestions / totalQuestions
-            assertThat(probability).isCloseTo(expected, Percentage.withPercentage(5.0))
+            assertThat(probability).isCloseTo(expected, Offset.offset(5.0))
         }
 
         Then("^probability of getting question for (.*) is (.*) percent$") { level: String, probability: Double ->
@@ -166,7 +183,7 @@ class Steps : En {
     }
 
     private fun generateNoun(): Noun {
-        val noun = Noun(Random().nextLong(), UUID.randomUUID().toString(), Gender.MASCULINE, UUID.randomUUID().toString())
+        val noun = Noun(Random().nextLong(), UUID.randomUUID().toString(), Gender.MASCULINE, UUID.randomUUID().toString(), "")
         nouns[noun.word] = noun
         return noun
     }
@@ -178,8 +195,8 @@ class Steps : En {
     }
 
     companion object {
-        private val WRONG_NOUN: Noun = Noun(Random().nextLong(), "a", Gender.MASCULINE, "b")
-        private val SOME_NOUN: Noun = Noun(Random().nextLong(), "Entscheidung", Gender.FEMININE, "decision")
+        private val WRONG_NOUN: Noun = Noun(Random().nextLong(), "a", Gender.MASCULINE, "b", "")
+        private val SOME_NOUN: Noun = Noun(Random().nextLong(), "Entscheidung", Gender.FEMININE, "decision", "")
     }
 }
 

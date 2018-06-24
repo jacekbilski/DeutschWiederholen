@@ -25,7 +25,7 @@ class FilesRepository(private val basePath: String): Repository {
                         .withSeparator(',')
                         .build())
                 .build()
-        return csvReader.readAll().mapIndexed { index, line -> Noun(index.toLong(), line[0], Gender.of(line[1]), line[2]) }
+        return csvReader.readAll().mapIndexed { index, line -> Noun(index.toLong(), line[0], Gender.of(line[1]), line[2], line[3]) }
     }
 
     override fun persistAnswer(question: QuestionPrototype, result: Boolean) {
