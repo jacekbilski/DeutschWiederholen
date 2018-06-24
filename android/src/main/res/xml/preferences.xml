@@ -7,16 +7,21 @@
             android:title="Gender weight"
             android:key="@string/pref_nouns_gender_weight"
             android:max="100"
-            android:defaultValue="60" />
+            android:defaultValue="30" />
         <android.support.v7.preference.SeekBarPreference
             android:title="Noun weight"
             android:key="@string/pref_nouns_noun_weight"
             android:max="100"
-            android:defaultValue="20" />
+            android:defaultValue="30" />
         <android.support.v7.preference.SeekBarPreference
-            android:title="Translation weight"
-            android:key="@string/pref_nouns_translation_weight"
-            android:max="100"
-            android:defaultValue="20" />
+                android:title="Translation weight"
+                android:key="@string/pref_nouns_translation_weight"
+                android:max="100"
+                android:defaultValue="30" />
+        <android.support.v7.preference.SeekBarPreference
+                android:title="Plural ending weight"
+                android:key="@string/pref_nouns_plural_ending_weight"
+                android:max="100"
+                android:defaultValue="10" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>
