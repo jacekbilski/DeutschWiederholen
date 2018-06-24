@@ -16,7 +16,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
         questionPrototypes = repository.getNouns()
                 .flatMap { noun ->
                     listOf(QuestionPrototype(QuestionType.GENDER, noun),
-                            QuestionPrototype(QuestionType.NOUN, noun),
+                            QuestionPrototype(QuestionType.TERM_ITSELF, noun),
                             QuestionPrototype(QuestionType.TRANSLATION, noun))
                 }
 
@@ -44,7 +44,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
                         Choice("das", Gender.NEUTER))
                 Question(prototype, genderChoices.shuffled())
             }
-            QuestionType.NOUN -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
+            QuestionType.TERM_ITSELF -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
             QuestionType.TRANSLATION -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.translation, nn) })
         }
     }
@@ -60,7 +60,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
     fun verify(prototype: QuestionPrototype, answer: Choice): Boolean {
         val result = when (prototype.type) {
             QuestionType.GENDER -> prototype.noun.gender == answer.value
-            QuestionType.NOUN -> prototype.noun == answer.value
+            QuestionType.TERM_ITSELF -> prototype.noun == answer.value
             QuestionType.TRANSLATION -> prototype.noun == answer.value
         }
         repository.persistAnswer(prototype, result)

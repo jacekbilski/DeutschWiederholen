@@ -37,7 +37,7 @@ class Steps : En {
 
         When("^the user chooses noun (.+)$") { choice: String ->
             val currentChoice = Choice("", nouns[choice] ?: WRONG_NOUN)
-            val prototype = QuestionPrototype(QuestionType.NOUN, noun)
+            val prototype = QuestionPrototype(QuestionType.TERM_ITSELF, noun)
             result = quiz.verify(prototype, currentChoice)
         }
 
@@ -53,7 +53,7 @@ class Steps : En {
 
         Given("^a question$") {
             noun = Noun(Random().nextLong(), "a", Gender.FEMININE, "")
-            questionPrototype = QuestionPrototype(QuestionType.NOUN, noun)
+            questionPrototype = QuestionPrototype(QuestionType.TERM_ITSELF, noun)
         }
 
         When("^the user answers the question$") {
@@ -82,7 +82,7 @@ class Steps : En {
             repository.staticNouns += noun
             settings.translationWeight = 0
             settings.genderWeight = 0
-            val prototype = QuestionPrototype(QuestionType.NOUN, noun)
+            val prototype = QuestionPrototype(QuestionType.TERM_ITSELF, noun)
             when (level) {
                 "new" -> {
                     settings.newTermsWeight = weight
@@ -109,7 +109,7 @@ class Steps : En {
         }
 
         Then("^probability of getting (.+) question is (.+) percent$") { type: String, probability: Double ->
-            val generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.NOUN, 0), Pair(QuestionType.TRANSLATION, 0))
+            val generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.TERM_ITSELF, 0), Pair(QuestionType.TRANSLATION, 0))
             for (question in generatedQuestions) {
                 generatedQuestionTypes[question.prototype.type] = generatedQuestionTypes.getValue(question.prototype.type) + 1
             }
@@ -137,7 +137,7 @@ class Steps : En {
         }
 
         Given("^a question type") {
-            questionType = QuestionType.NOUN
+            questionType = QuestionType.TERM_ITSELF
         }
 
         Given("^t?h?e?n? ?(\\d+) (i?n?)correct answers$") { no: Int, corr: String ->
