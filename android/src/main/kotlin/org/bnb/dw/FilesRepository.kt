@@ -2,6 +2,7 @@ package org.bnb.dw
 
 import com.opencsv.CSVParserBuilder
 import com.opencsv.CSVReaderBuilder
+import com.opencsv.enums.CSVReaderNullFieldIndicator
 import org.bnb.dw.core.*
 import java.io.File
 import java.io.FileReader
@@ -23,6 +24,7 @@ class FilesRepository(private val basePath: String): Repository {
                 .withSkipLines(1)
                 .withCSVParser(CSVParserBuilder()
                         .withSeparator(',')
+                        .withFieldAsNull(CSVReaderNullFieldIndicator.BOTH)
                         .build())
                 .build()
         return csvReader.readAll().mapIndexed { index, line -> Noun(index.toLong(), line[0], Gender.of(line[1]), line[2], line[3]) }

@@ -2,7 +2,7 @@ package org.bnb.dw.core
 
 import java.util.*
 
-class Quiz(private val repository: Repository, private val settings: Settings) {
+class Quiz(private val repository: Repository, settings: Settings) {
 
     private val random: Random = Random()
     private val questionPrototypes: List<QuestionPrototype>
@@ -44,7 +44,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
     }
 
     private fun proposePluralEndingAnswers(noun: Noun): List<String> {
-        return repository.getNouns().map { n -> n.pluralEnding }.toSet().minus(noun.pluralEnding).shuffled().take(4).plus(noun.pluralEnding).shuffled()
+        return repository.getNouns().map { n -> n.pluralEnding }.toSet().minus(noun.pluralEnding).shuffled().take(4).plus(noun.pluralEnding).map { e -> e ?: "no plural form" }.shuffled()
     }
 
     private fun proposeAnswers(noun: Noun): List<Noun> {
