@@ -3,7 +3,6 @@ package org.bnb.dw.core.cucumber
 import cucumber.api.java8.En
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
-import org.assertj.core.data.Percentage
 import org.bnb.dw.core.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -99,6 +98,7 @@ class Steps : En {
             repository.staticNouns += noun
             settings.translationWeight = 0
             settings.genderWeight = 0
+            settings.pluralEndingWeight = 0
             val prototype = QuestionPrototype(QuestionType.TERM_ITSELF, noun)
             when (level) {
                 "new" -> {
@@ -126,7 +126,7 @@ class Steps : En {
         }
 
         Then("^probability of getting (.+) question is (.+) percent$") { type: String, probability: Double ->
-            val generatedQuestionTypes: MutableMap<QuestionType, Int> = mutableMapOf(Pair(QuestionType.GENDER, 0), Pair(QuestionType.TERM_ITSELF, 0), Pair(QuestionType.TRANSLATION, 0))
+            val generatedQuestionTypes: MutableMap<QuestionType, Int> = QuestionType.values().map { t -> Pair(t, 0) }.toMap().toMutableMap()
             for (question in generatedQuestions) {
                 generatedQuestionTypes[question.prototype.type] = generatedQuestionTypes.getValue(question.prototype.type) + 1
             }
@@ -137,7 +137,7 @@ class Steps : En {
         }
 
         Then("^probability of getting question for (.*) is (.*) percent$") { level: String, probability: Double ->
-            val generatedQuestionKnowledgeLevels: MutableMap<LevelOfKnowledge, Int> = mutableMapOf(Pair(LevelOfKnowledge.NEW, 0), Pair(LevelOfKnowledge.NEEDS_PRACTICE, 0), Pair(LevelOfKnowledge.LEARNED, 0))
+            val generatedQuestionKnowledgeLevels: MutableMap<LevelOfKnowledge, Int> = LevelOfKnowledge.values().map { l -> Pair(l, 0) }.toMap().toMutableMap()
             for (question in generatedQuestions) {
                 levelOfKnowledge = progressEvaluator.evaluate(question.prototype)
                 generatedQuestionKnowledgeLevels[levelOfKnowledge] = generatedQuestionKnowledgeLevels.getValue(levelOfKnowledge) + 1
@@ -145,7 +145,7 @@ class Steps : En {
             val totalQuestions = generatedQuestionKnowledgeLevels.values.sum()
             val thisLevelQuestions = generatedQuestionKnowledgeLevels.getOrDefault(LevelOfKnowledge.valueOf(level.replace(" ", "_").toUpperCase()), -1)
             val expected = 100.0 * thisLevelQuestions / totalQuestions
-            assertThat(probability).isCloseTo(expected, Percentage.withPercentage(5.0))
+            assertThat(probability).isCloseTo(expected, Offset.offset(5.0))
         }
 
         Given("^a word$") {

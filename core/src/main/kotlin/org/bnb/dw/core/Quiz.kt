@@ -14,11 +14,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
         questionTypeSelectionStrategy = QuestionTypeSelectionStrategy(settings)
         levelOfKnowledgeSelectionStrategy = LevelOfKnowledgeSelectionStrategy(settings, repository)
         questionPrototypes = repository.getNouns()
-                .flatMap { noun ->
-                    listOf(QuestionPrototype(QuestionType.GENDER, noun),
-                            QuestionPrototype(QuestionType.TERM_ITSELF, noun),
-                            QuestionPrototype(QuestionType.TRANSLATION, noun))
-                }
+                .flatMap { noun -> QuestionType.values().map { t -> QuestionPrototype(t, noun) } }
 
         questions = object : Iterator<Question> {
             override fun hasNext(): Boolean = true
@@ -38,10 +34,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
     private fun prepareQuestion(prototype: QuestionPrototype): Question {
         return when (prototype.type) {
             QuestionType.GENDER -> {
-                val genderChoices = listOf(
-                        Choice("der", Gender.MASCULINE),
-                        Choice("die", Gender.FEMININE),
-                        Choice("das", Gender.NEUTER))
+                val genderChoices = Gender.values().map { g -> Choice(g.article, g) }
                 Question(prototype, genderChoices.shuffled())
             }
             QuestionType.TERM_ITSELF -> Question(prototype, proposeAnswers(prototype.noun).map { nn -> Choice(nn.gender.article + " " + nn.word, nn) })
@@ -51,7 +44,7 @@ class Quiz(private val repository: Repository, private val settings: Settings) {
     }
 
     private fun proposePluralEndingAnswers(noun: Noun): List<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return repository.getNouns().map { n -> n.pluralEnding }.toSet().minus(noun.pluralEnding).shuffled().take(4).plus(noun.pluralEnding).shuffled()
     }
 
     private fun proposeAnswers(noun: Noun): List<Noun> {
