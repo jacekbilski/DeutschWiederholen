@@ -1,9 +1,11 @@
-ext {
-    cucumber_version = "2.4.0"
-    junit_version = "5.1.1"
+plugins {
+    id "kotlin"
 }
 
-apply plugin: "kotlin"
+ext {
+    cucumber_version = "4.2.0"
+    junit_version = "5.3.2"
+}
 
 group = "org.bnb.dw"
 version = "0.0.1-SNAPSHOT"
@@ -14,5 +16,5 @@ dependencies {
     testImplementation "io.cucumber:cucumber-java8:$cucumber_version"
     testImplementation "io.cucumber:cucumber-junit:$cucumber_version"
     testRuntime "org.junit.vintage:junit-vintage-engine:$junit_version"
-    testImplementation "org.assertj:assertj-core:3.10.0"
+    testImplementation "org.assertj:assertj-core:3.11.1"
 }
