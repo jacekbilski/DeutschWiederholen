@@ -59,7 +59,7 @@ class Steps : En {
             result = quiz.verify(prototype, currentChoice)
         }
 
-        Then("^the answer was correct: (\\w+)$") { correct: Boolean ->
+        Then("the answer was correct: {boolean}") { correct: Boolean ->
             assertThat(result).isEqualTo(correct)
         }
 
